@@ -4,12 +4,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -26,6 +29,21 @@ fun PantryScreen(
     state: PantryState,
     onIntent: (PantryIntent) -> Unit
 ) {
+    val visibleItems = state.items
+        .filter { item ->
+            state.searchQuery.isBlank() ||
+                    item.name.contains(state.searchQuery, ignoreCase = true) ||
+                    item.category.contains(state.searchQuery, ignoreCase = true) ||
+                    item.location.contains(state.searchQuery, ignoreCase = true)
+        }
+        .sortedWith(
+            compareBy<PantryItemUiModel> {
+                it.expirationDate ?: Long.MAX_VALUE
+            }.thenBy { it.name }
+        )
+
+    val groupedItems = visibleItems.groupBy { it.location }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,6 +82,15 @@ fun PantryScreen(
             }
 
             else -> {
+                OutlinedTextField(
+                    value = state.searchQuery,
+                    onValueChange = { onIntent(PantryIntent.SearchChanged(it)) },
+                    label = { Text("Search pantry") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+
                 LazyColumn(
                     modifier = Modifier
                         .padding(padding)
@@ -71,13 +98,22 @@ fun PantryScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(state.items) { item ->
-                        PantryItemCard(
-                            item = item,
-                            onDelete = {
-                                onIntent(PantryIntent.DeleteItem(item))
-                            }
-                        )
+                    groupedItems.forEach { (location, items) ->
+                        item {
+                            Text(
+                                text = location,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
+
+                        items(items) { item ->
+                            PantryItemCard(
+                                item = item,
+                                onDelete = {
+                                    onIntent(PantryIntent.DeleteItem(item))
+                                }
+                            )
+                        }
                     }
                 }
             }

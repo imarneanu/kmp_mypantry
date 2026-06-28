@@ -31,15 +31,39 @@ class PantryViewModel(
 
             PantryIntent.HideAddSheet -> hideAddSheet()
 
+            PantryIntent.ShowLocationDropdown ->
+                _state.updateState { copy(isLocationDropdownExpanded = true) }
+
+            PantryIntent.HideLocationDropdown ->
+                _state.updateState { copy(isLocationDropdownExpanded = false) }
+
+            is PantryIntent.LocationSelected ->
+                _state.updateState {
+                    copy(
+                        locationInput = intent.value,
+                        isLocationDropdownExpanded = false
+                    )
+                }
+
+            PantryIntent.ShowCategoryDropdown ->
+                _state.updateState { copy(isCategoryDropdownExpanded = true) }
+
+            PantryIntent.HideCategoryDropdown ->
+                _state.updateState { copy(isCategoryDropdownExpanded = false) }
+
+            is PantryIntent.CategorySelected ->
+                _state.updateState {
+                    copy(
+                        categoryInput = intent.value,
+                        isCategoryDropdownExpanded = false
+                    )
+                }
+
             is PantryIntent.NameChanged -> _state.updateState { copy(nameInput = intent.value) }
 
             is PantryIntent.QuantityChanged -> _state.updateState { copy(quantityInput = intent.value) }
 
             is PantryIntent.UnitChanged -> _state.updateState { copy(unitInput = intent.value) }
-
-            is PantryIntent.LocationChanged -> _state.updateState { copy(locationInput = intent.value) }
-
-            is PantryIntent.CategoryChanged -> _state.updateState { copy(categoryInput = intent.value) }
 
             PantryIntent.SaveItem -> saveItem()
 
@@ -58,6 +82,9 @@ class PantryViewModel(
                         isDatePickerVisible = false
                     )
                 }
+
+            is PantryIntent.SearchChanged ->
+                _state.updateState { copy(searchQuery = intent.value) }
         }
     }
 

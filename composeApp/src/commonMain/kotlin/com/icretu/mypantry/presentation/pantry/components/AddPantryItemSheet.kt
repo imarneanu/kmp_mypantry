@@ -63,17 +63,37 @@ fun AddPantryItemSheet(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(
+            PantryDropdownField(
+                label = "Location",
                 value = state.locationInput,
-                onValueChange = { onIntent(PantryIntent.LocationChanged(it)) },
-                label = { Text("Location") },
+                options = state.locationOptions,
+                expanded = state.isLocationDropdownExpanded,
+                onExpandedChange = { expanded ->
+                    onIntent(
+                        if (expanded) PantryIntent.ShowLocationDropdown
+                        else PantryIntent.HideLocationDropdown
+                    )
+                },
+                onOptionSelected = {
+                    onIntent(PantryIntent.LocationSelected(it))
+                },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(
+            PantryDropdownField(
+                label = "Category",
                 value = state.categoryInput,
-                onValueChange = { onIntent(PantryIntent.CategoryChanged(it)) },
-                label = { Text("Category") },
+                options = state.categoryOptions,
+                expanded = state.isCategoryDropdownExpanded,
+                onExpandedChange = { expanded ->
+                    onIntent(
+                        if (expanded) PantryIntent.ShowCategoryDropdown
+                        else PantryIntent.HideCategoryDropdown
+                    )
+                },
+                onOptionSelected = {
+                    onIntent(PantryIntent.CategorySelected(it))
+                },
                 modifier = Modifier.fillMaxWidth()
             )
 
