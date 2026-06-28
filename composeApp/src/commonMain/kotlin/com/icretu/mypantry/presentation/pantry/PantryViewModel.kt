@@ -128,7 +128,7 @@ class PantryViewModel(
                 .collect { items ->
                     _state.updateState {
                         copy(
-                            items = items,
+                            items = items.map { it.toUiModel() },
                             isLoading = false
                         )
                     }
@@ -136,9 +136,9 @@ class PantryViewModel(
         }
     }
 
-    private fun deleteItem(item: PantryItem) {
+    private fun deleteItem(item: PantryItemUiModel) {
         viewModelScope.launch {
-            deletePantryItemUseCase(item)
+            deletePantryItemUseCase(item.id)
         }
     }
 }

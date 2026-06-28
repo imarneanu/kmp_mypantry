@@ -23,7 +23,7 @@ class AndroidPantryRepository(
         dao.upsertItem(item.toEntity())
     }
 
-    override suspend fun deleteItem(item: PantryItem) {
-        dao.deleteItem(item.toEntity())
+    override suspend fun deleteItem(id: Long) {
+        dao.deleteById(id)
     }
 }

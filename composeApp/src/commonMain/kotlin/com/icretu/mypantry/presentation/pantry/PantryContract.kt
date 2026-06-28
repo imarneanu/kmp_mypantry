@@ -1,10 +1,9 @@
 package com.icretu.mypantry.presentation.pantry
 
-import com.icretu.mypantry.domain.model.PantryItem
 import kotlinx.datetime.LocalDate
 
 data class PantryState(
-    val items: List<PantryItem> = emptyList(),
+    val items: List<PantryItemUiModel> = emptyList(),
     val isLoading: Boolean = true,
     val errorMessage: String? = null,
     val isAddSheetVisible: Boolean = false,
@@ -34,5 +33,5 @@ sealed interface PantryIntent {
     data class CategoryChanged(val value: String) : PantryIntent
 
     data object SaveItem : PantryIntent
-    data class DeleteItem(val item: PantryItem) : PantryIntent
+    data class DeleteItem(val item: PantryItemUiModel) : PantryIntent
 }

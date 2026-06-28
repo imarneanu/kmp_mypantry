@@ -11,23 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.icretu.mypantry.domain.model.PantryItem
-import com.icretu.mypantry.domain.model.ExpiryStatus
-import com.icretu.mypantry.domain.model.toExpiryStatus
-import com.icretu.mypantry.utils.DateUtils
+import com.icretu.mypantry.domain.model.ExpiryColor
+import com.icretu.mypantry.presentation.pantry.PantryItemUiModel
 
 @Composable
 fun PantryItemCard(
-    item: PantryItem,
+    item: PantryItemUiModel,
     onDelete: () -> Unit
 ) {
-    val expiryStatus = item.expirationDate.toExpiryStatus()
-    val expiryColor = when (expiryStatus) {
-        ExpiryStatus.EXPIRED -> MaterialTheme.colorScheme.error
-        ExpiryStatus.EXPIRING_SOON -> MaterialTheme.colorScheme.tertiary
-        ExpiryStatus.OK -> MaterialTheme.colorScheme.onSurfaceVariant
-        ExpiryStatus.NONE -> MaterialTheme.colorScheme.onSurfaceVariant
+    val color = when (item.expirationColor) {
+        ExpiryColor.DEFAULT -> MaterialTheme.colorScheme.onSurfaceVariant
+        ExpiryColor.WARNING -> Color(0xFFFF9800)
+        ExpiryColor.ERROR -> MaterialTheme.colorScheme.error
     }
 
     Card(
@@ -43,29 +40,15 @@ fun PantryItemCard(
 
             Spacer(Modifier.height(4.dp))
 
-            Text("${item.quantity} ${item.unit}")
+            Text(item.quantityText)
             Text("Location: ${item.location}")
             Text("Category: ${item.category}")
 
             Spacer(Modifier.height(4.dp))
 
             Text(
-                text = when (expiryStatus) {
-                    ExpiryStatus.EXPIRED ->
-                        "Expired: ${DateUtils.formatDate(item.expirationDate)}"
-
-                    ExpiryStatus.EXPIRING_SOON ->
-                        "Expires soon: ${DateUtils.formatDate(item.expirationDate)}"
-
-                    ExpiryStatus.OK ->
-                        "Expires: ${DateUtils.formatDate(item.expirationDate)}"
-
-                    ExpiryStatus.NONE ->
-                        "No expiration date"
-                },
-
-                color = expiryColor
-
+                text = item.expirationText,
+                color = color
             )
 
             Spacer(Modifier.height(8.dp))

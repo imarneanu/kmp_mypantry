@@ -8,5 +8,5 @@ interface PantryRepository {
 
     suspend fun addItem(item: PantryItem)
 
-    suspend fun deleteItem(item: PantryItem)
+    suspend fun deleteItem(id: Long)
 }
