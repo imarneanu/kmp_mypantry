@@ -1,13 +1,22 @@
 package com.icretu.mypantry.presentation.pantry
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.icretu.mypantry.domain.model.PantryItem
+import com.icretu.mypantry.presentation.pantry.components.AddPantryItemSheet
 import com.icretu.mypantry.presentation.pantry.components.PantryItemCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,7 +33,7 @@ fun PantryScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onIntent(PantryIntent.AddSampleItem) }
+                onClick = { onIntent(PantryIntent.ShowAddSheet) }
             ) {
                 Text("+")
             }
@@ -72,5 +81,12 @@ fun PantryScreen(
                 }
             }
         }
+    }
+
+    if (state.isAddSheetVisible) {
+        AddPantryItemSheet(
+            state = state,
+            onIntent = onIntent
+        )
     }
 }

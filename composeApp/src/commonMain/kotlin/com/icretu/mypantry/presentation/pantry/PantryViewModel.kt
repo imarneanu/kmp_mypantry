@@ -6,6 +6,7 @@ import com.icretu.mypantry.domain.model.PantryItem
 import com.icretu.mypantry.domain.usecase.AddPantryItemUseCase
 import com.icretu.mypantry.domain.usecase.DeletePantryItemUseCase
 import com.icretu.mypantry.domain.usecase.ObservePantryItemsUseCase
+import com.icretu.mypantry.utils.updateState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,8 +27,72 @@ class PantryViewModel(
 
     fun onIntent(intent: PantryIntent) {
         when (intent) {
-            PantryIntent.AddSampleItem -> addSampleItem()
+            PantryIntent.ShowAddSheet -> showAddSheet()
+            PantryIntent.HideAddSheet -> hideAddSheet()
+            is PantryIntent.NameChanged -> _state.updateState { copy(nameInput = intent.value) }
+            is PantryIntent.QuantityChanged -> _state.updateState { copy(quantityInput = intent.value) }
+            is PantryIntent.UnitChanged -> _state.updateState { copy(unitInput = intent.value) }
+            is PantryIntent.LocationChanged -> _state.updateState { copy(locationInput = intent.value) }
+            is PantryIntent.CategoryChanged -> _state.updateState { copy(categoryInput = intent.value) }
+            PantryIntent.SaveItem -> saveItem()
             is PantryIntent.DeleteItem -> deleteItem(intent.item)
+        }
+    }
+
+    private fun showAddSheet() {
+        _state.updateState {
+            copy(
+                isAddSheetVisible = true,
+                errorMessage = null
+            )
+        }
+    }
+
+    private fun hideAddSheet() {
+        _state.updateState {
+            copy(
+                isAddSheetVisible = false,
+                errorMessage = null
+            )
+        }
+
+    }
+
+    private fun saveItem() {
+        val currentState = _state.value
+        val quantity = currentState.quantityInput.toIntOrNull()
+        if (currentState.nameInput.isBlank()) {
+            _state.updateState { copy(errorMessage = "Name cannot be empty") }
+            return
+        }
+
+        if (quantity == null || quantity <= 0) {
+            _state.updateState { copy(errorMessage = "Quantity must be greater than 0") }
+            return
+        }
+
+        viewModelScope.launch {
+            addPantryItemUseCase(
+                PantryItem(
+                    name = currentState.nameInput.trim(),
+                    quantity = quantity,
+                    unit = currentState.unitInput.trim(),
+                    location = currentState.locationInput.trim(),
+                    category = currentState.categoryInput.trim()
+                )
+            )
+
+            _state.updateState {
+                copy(
+                    isAddSheetVisible = false,
+                    nameInput = "",
+                    quantityInput = "",
+                    unitInput = "pcs",
+                    locationInput = "Pantry",
+                    categoryInput = "Essentials",
+                    errorMessage = null
+                )
+            }
         }
     }
 
@@ -35,25 +100,13 @@ class PantryViewModel(
         viewModelScope.launch {
             observePantryItemsUseCase()
                 .collect { items ->
-                    _state.value = PantryState(
-                        items = items,
-                        isLoading = false
-                    )
+                    _state.updateState {
+                        copy(
+                            items = items,
+                            isLoading = false
+                        )
+                    }
                 }
-        }
-    }
-
-    private fun addSampleItem() {
-        viewModelScope.launch {
-            addPantryItemUseCase(
-                PantryItem(
-                    name = "Flour",
-                    quantity = 2,
-                    unit = "kg",
-                    location = "Pantry",
-                    category = "Essentials"
-                )
-            )
         }
     }
 
