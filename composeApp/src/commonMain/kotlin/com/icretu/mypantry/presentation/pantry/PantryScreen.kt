@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.icretu.mypantry.presentation.pantry.components.AddPantryItemSheet
+import com.icretu.mypantry.presentation.pantry.components.ExpirationDatePickerDialog
 import com.icretu.mypantry.presentation.pantry.components.PantryItemCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,6 +88,18 @@ fun PantryScreen(
         AddPantryItemSheet(
             state = state,
             onIntent = onIntent
+        )
+    }
+
+    if (state.isDatePickerVisible) {
+        ExpirationDatePickerDialog(
+            selectedDate = state.expirationDate,
+            onDateSelected = {
+                onIntent(PantryIntent.ExpirationDateSelected(it))
+            },
+            onDismiss = {
+                onIntent(PantryIntent.HideDatePicker)
+            }
         )
     }
 }

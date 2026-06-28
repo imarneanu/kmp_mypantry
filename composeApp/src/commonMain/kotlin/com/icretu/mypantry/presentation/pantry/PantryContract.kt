@@ -1,6 +1,7 @@
 package com.icretu.mypantry.presentation.pantry
 
 import com.icretu.mypantry.domain.model.PantryItem
+import kotlinx.datetime.LocalDate
 
 data class PantryState(
     val items: List<PantryItem> = emptyList(),
@@ -12,12 +13,19 @@ data class PantryState(
     val quantityInput: String = "",
     val unitInput: String = "pcs",
     val locationInput: String = "Pantry",
-    val categoryInput: String = "Essentials"
+    val categoryInput: String = "Essentials",
+
+    val isDatePickerVisible: Boolean = false,
+    val expirationDate: LocalDate? = null
 )
 
 sealed interface PantryIntent {
     data object ShowAddSheet : PantryIntent
     data object HideAddSheet : PantryIntent
+
+    data object ShowDatePicker : PantryIntent
+    data object HideDatePicker : PantryIntent
+    data class ExpirationDateSelected(val date: LocalDate?) : PantryIntent
 
     data class NameChanged(val value: String) : PantryIntent
     data class QuantityChanged(val value: String) : PantryIntent

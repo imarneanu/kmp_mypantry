@@ -10,6 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.icretu.mypantry.presentation.pantry.PantryIntent
 import com.icretu.mypantry.presentation.pantry.PantryState
+import com.icretu.mypantry.utils.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,6 +76,13 @@ fun AddPantryItemSheet(
                 label = { Text("Category") },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            OutlinedButton(
+                onClick = { onIntent(PantryIntent.ShowDatePicker) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Expiration: ${DateUtils.formatDate(state.expirationDate)}")
+            }
 
             state.errorMessage?.let { message ->
                 Text(

@@ -10,7 +10,7 @@ fun PantryItemEntity.toDomain(): PantryItem {
         unit = unit,
         location = location,
         category = category,
-        expirationDateMillis = expirationDateMillis,
+        expirationDate = expirationDate,
         storeName = storeName,
         price = price,
         notes = notes
@@ -25,7 +25,7 @@ fun PantryItem.toEntity(): PantryItemEntity {
         unit = unit,
         location = location,
         category = category,
-        expirationDateMillis = expirationDateMillis,
+        expirationDate = expirationDate,
         storeName = storeName,
         price = price,
         notes = notes

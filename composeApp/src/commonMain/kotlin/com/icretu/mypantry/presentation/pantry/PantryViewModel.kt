@@ -28,14 +28,36 @@ class PantryViewModel(
     fun onIntent(intent: PantryIntent) {
         when (intent) {
             PantryIntent.ShowAddSheet -> showAddSheet()
+
             PantryIntent.HideAddSheet -> hideAddSheet()
+
             is PantryIntent.NameChanged -> _state.updateState { copy(nameInput = intent.value) }
+
             is PantryIntent.QuantityChanged -> _state.updateState { copy(quantityInput = intent.value) }
+
             is PantryIntent.UnitChanged -> _state.updateState { copy(unitInput = intent.value) }
+
             is PantryIntent.LocationChanged -> _state.updateState { copy(locationInput = intent.value) }
+
             is PantryIntent.CategoryChanged -> _state.updateState { copy(categoryInput = intent.value) }
+
             PantryIntent.SaveItem -> saveItem()
+
             is PantryIntent.DeleteItem -> deleteItem(intent.item)
+
+            PantryIntent.ShowDatePicker ->
+                _state.updateState { copy(isDatePickerVisible = true) }
+
+            PantryIntent.HideDatePicker ->
+                _state.updateState { copy(isDatePickerVisible = false) }
+
+            is PantryIntent.ExpirationDateSelected ->
+                _state.updateState {
+                    copy(
+                        expirationDate = intent.date,
+                        isDatePickerVisible = false
+                    )
+                }
         }
     }
 
@@ -61,6 +83,7 @@ class PantryViewModel(
     private fun saveItem() {
         val currentState = _state.value
         val quantity = currentState.quantityInput.toIntOrNull()
+
         if (currentState.nameInput.isBlank()) {
             _state.updateState { copy(errorMessage = "Name cannot be empty") }
             return
@@ -78,7 +101,8 @@ class PantryViewModel(
                     quantity = quantity,
                     unit = currentState.unitInput.trim(),
                     location = currentState.locationInput.trim(),
-                    category = currentState.categoryInput.trim()
+                    category = currentState.categoryInput.trim(),
+                    expirationDate = currentState.expirationDate,
                 )
             )
 
@@ -90,7 +114,9 @@ class PantryViewModel(
                     unitInput = "pcs",
                     locationInput = "Pantry",
                     categoryInput = "Essentials",
-                    errorMessage = null
+                    expirationDate = null,
+                    isDatePickerVisible = false,
+                    errorMessage = null,
                 )
             }
         }

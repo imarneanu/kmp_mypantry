@@ -1,5 +1,7 @@
 package com.icretu.mypantry.domain.model
 
+import kotlinx.datetime.LocalDate
+
 data class PantryItem(
     val id: Long = 0,
     val name: String,
@@ -7,7 +9,7 @@ data class PantryItem(
     val unit: String,
     val location: String,
     val category: String,
-    val expirationDateMillis: Long? = null,
+    val expirationDate: LocalDate? = null,
     val storeName: String? = null,
     val price: Double? = null,
     val notes: String? = null

@@ -13,12 +13,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.icretu.mypantry.domain.model.PantryItem
+import com.icretu.mypantry.domain.model.ExpiryStatus
+import com.icretu.mypantry.domain.model.toExpiryStatus
+import com.icretu.mypantry.utils.DateUtils
 
 @Composable
 fun PantryItemCard(
     item: PantryItem,
     onDelete: () -> Unit
 ) {
+    val expiryStatus = item.expirationDate.toExpiryStatus()
+    val expiryColor = when (expiryStatus) {
+        ExpiryStatus.EXPIRED -> MaterialTheme.colorScheme.error
+        ExpiryStatus.EXPIRING_SOON -> MaterialTheme.colorScheme.tertiary
+        ExpiryStatus.OK -> MaterialTheme.colorScheme.onSurfaceVariant
+        ExpiryStatus.NONE -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -36,6 +47,28 @@ fun PantryItemCard(
             Text("Location: ${item.location}")
             Text("Category: ${item.category}")
 
+            Spacer(Modifier.height(4.dp))
+
+            Text(
+                text = when (expiryStatus) {
+                    ExpiryStatus.EXPIRED ->
+                        "Expired: ${DateUtils.formatDate(item.expirationDate)}"
+
+                    ExpiryStatus.EXPIRING_SOON ->
+                        "Expires soon: ${DateUtils.formatDate(item.expirationDate)}"
+
+                    ExpiryStatus.OK ->
+                        "Expires: ${DateUtils.formatDate(item.expirationDate)}"
+
+                    ExpiryStatus.NONE ->
+                        "No expiration date"
+                },
+
+                color = expiryColor
+
+            )
+
+            Spacer(Modifier.height(8.dp))
             Spacer(Modifier.height(8.dp))
 
             TextButton(onClick = onDelete) {

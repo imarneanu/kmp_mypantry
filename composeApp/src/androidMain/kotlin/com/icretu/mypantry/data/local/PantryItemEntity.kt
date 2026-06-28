@@ -2,6 +2,7 @@ package com.icretu.mypantry.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.datetime.LocalDate
 
 @Entity(tableName = "pantry_items")
 data class PantryItemEntity(
@@ -12,7 +13,7 @@ data class PantryItemEntity(
     val unit: String,
     val location: String,
     val category: String,
-    val expirationDateMillis: Long? = null,
+    val expirationDate: LocalDate? = null,
     val storeName: String? = null,
     val price: Double? = null,
     val notes: String? = null
