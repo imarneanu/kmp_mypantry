@@ -2,6 +2,7 @@ package com.icretu.mypantry
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import com.icretu.mypantry.navigation.AppNavigation
 import com.icretu.mypantry.presentation.pantry.PantryRoute
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -9,6 +10,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     MaterialTheme {
-        PantryRoute()
+        AppNavigation()
     }
 }

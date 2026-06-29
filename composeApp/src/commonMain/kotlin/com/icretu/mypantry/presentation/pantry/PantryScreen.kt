@@ -2,6 +2,7 @@ package com.icretu.mypantry.presentation.pantry
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,10 +14,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.icretu.mypantry.presentation.pantry.components.AddPantryItemSheet
@@ -44,79 +44,69 @@ fun PantryScreen(
 
     val groupedItems = visibleItems.groupBy { it.location }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("My Pantry") }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { onIntent(PantryIntent.ShowAddSheet) }
-            ) {
-                Text("+")
-            }
-        }
-    ) { padding ->
+    Box(modifier = Modifier.fillMaxSize()) {
         when {
             state.isLoading -> {
-                Box(
-                    modifier = Modifier
-                        .padding(padding)
-                        .fillMaxSize()
-                        .padding(24.dp)
-                ) {
-                    CircularProgressIndicator()
-                }
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
 
             state.items.isEmpty() -> {
-                Box(
+                Text(
+                    text = "No pantry items yet. Tap + to add one.",
                     modifier = Modifier
-                        .padding(padding)
-                        .fillMaxSize()
+                        .align(Alignment.Center)
                         .padding(24.dp)
-                ) {
-                    Text("No pantry items yet. Tap + to add one.")
-                }
+                )
             }
 
             else -> {
-                OutlinedTextField(
-                    value = state.searchQuery,
-                    onValueChange = { onIntent(PantryIntent.SearchChanged(it)) },
-                    label = { Text("Search pantry") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(padding)
-                        .fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                Column(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    groupedItems.forEach { (location, items) ->
-                        item {
-                            Text(
-                                text = location,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        }
+                    OutlinedTextField(
+                        value = state.searchQuery,
+                        onValueChange = { onIntent(PantryIntent.SearchChanged(it)) },
+                        label = { Text("Search pantry") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
 
-                        items(items) { item ->
-                            PantryItemCard(
-                                item = item,
-                                onDelete = {
-                                    onIntent(PantryIntent.DeleteItem(item))
-                                }
-                            )
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        groupedItems.forEach { (location, items) ->
+                            item {
+                                Text(
+                                    text = location,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                            items(items) { item ->
+                                PantryItemCard(
+                                    item = item,
+                                    onDelete = {
+                                        onIntent(PantryIntent.DeleteItem(item))
+                                    }
+                                )
+                            }
                         }
                     }
                 }
             }
+        }
+
+        FloatingActionButton(
+            onClick = { onIntent(PantryIntent.ShowAddSheet) },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+        ) {
+            Text("+")
         }
     }
 

@@ -42,6 +42,7 @@ kotlin {
             implementation(compose.ui)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.androidx.navigation.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.datetime)
