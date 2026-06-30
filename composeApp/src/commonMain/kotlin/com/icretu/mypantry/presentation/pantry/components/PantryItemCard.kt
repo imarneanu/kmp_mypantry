@@ -19,6 +19,7 @@ import com.icretu.mypantry.presentation.pantry.PantryItemUiModel
 @Composable
 fun PantryItemCard(
     item: PantryItemUiModel,
+    onClick: () -> Unit,
     onDelete: () -> Unit
 ) {
     val color = when (item.expirationColor) {
@@ -28,7 +29,8 @@ fun PantryItemCard(
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier.padding(16.dp)

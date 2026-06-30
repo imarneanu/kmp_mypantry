@@ -10,13 +10,19 @@ import kotlinx.datetime.LocalDate
 data class PantryItemUiModel(
     val id: Long,
     val name: String,
-    val quantityText: String,
+    val quantity: String,
+    val unit: String,
     val location: String,
     val category: String,
     val expirationDate: LocalDate? = null,
     val expirationText: String,
     val expirationColor: ExpiryColor,
-)
+    val storeName: String?,
+    val price: String?,
+    val notes: String?,
+) {
+    val quantityText = "${this.quantity} ${this.unit}"
+}
 
 fun PantryItem.toUiModel(): PantryItemUiModel {
     val status = this.expirationDate.toExpiryStatus()
@@ -24,7 +30,8 @@ fun PantryItem.toUiModel(): PantryItemUiModel {
     return PantryItemUiModel(
         id = this.id,
         name = this.name,
-        quantityText = "${this.quantity} ${this.unit}",
+        quantity = this.quantity.toString(),
+        unit = this.unit,
         location = this.location,
         category = this.category,
         expirationDate = this.expirationDate,
@@ -40,5 +47,8 @@ fun PantryItem.toUiModel(): PantryItemUiModel {
             ExpiryStatus.EXPIRING_SOON -> ExpiryColor.WARNING
             ExpiryStatus.EXPIRED -> ExpiryColor.ERROR
         },
+        storeName = this.storeName,
+        price = this.price.toString(),
+        notes = this.notes,
     )
 }

@@ -19,9 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.icretu.mypantry.presentation.pantry.components.AddPantryItemSheet
 import com.icretu.mypantry.presentation.pantry.components.ExpirationDatePickerDialog
 import com.icretu.mypantry.presentation.pantry.components.PantryItemCard
+import com.icretu.mypantry.presentation.pantry.components.PantryItemFormSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,6 +89,9 @@ fun PantryScreen(
                             items(items) { item ->
                                 PantryItemCard(
                                     item = item,
+                                    onClick = {
+                                        onIntent(PantryIntent.ItemClicked(item))
+                                    },
                                     onDelete = {
                                         onIntent(PantryIntent.DeleteItem(item))
                                     }
@@ -101,7 +104,7 @@ fun PantryScreen(
         }
 
         FloatingActionButton(
-            onClick = { onIntent(PantryIntent.ShowAddSheet) },
+            onClick = { onIntent(PantryIntent.AddClicked) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
@@ -110,8 +113,8 @@ fun PantryScreen(
         }
     }
 
-    if (state.isAddSheetVisible) {
-        AddPantryItemSheet(
+    if (state.isFormVisible) {
+        PantryItemFormSheet(
             state = state,
             onIntent = onIntent
         )
@@ -119,7 +122,7 @@ fun PantryScreen(
 
     if (state.isDatePickerVisible) {
         ExpirationDatePickerDialog(
-            selectedDate = state.expirationDate,
+            selectedDate = state.form.expirationDate,
             onDateSelected = {
                 onIntent(PantryIntent.ExpirationDateSelected(it))
             },

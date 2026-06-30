@@ -22,13 +22,16 @@ import com.icretu.mypantry.utils.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPantryItemSheet(
+fun PantryItemFormSheet(
     state: PantryState,
     onIntent: (PantryIntent) -> Unit
 ) {
+    val form = state.form
+    val title = if (form.id == null) "Add item" else "Edit item"
+
     ModalBottomSheet(
         onDismissRequest = {
-            onIntent(PantryIntent.HideAddSheet)
+            onIntent(PantryIntent.FormDismissed)
         }
     ) {
         Column(
@@ -38,26 +41,26 @@ fun AddPantryItemSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Add pantry item",
+                text = title,
                 style = MaterialTheme.typography.titleLarge
             )
 
             OutlinedTextField(
-                value = state.nameInput,
+                value = form.name,
                 onValueChange = { onIntent(PantryIntent.NameChanged(it)) },
                 label = { Text("Name") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
-                value = state.quantityInput,
+                value = form.quantity,
                 onValueChange = { onIntent(PantryIntent.QuantityChanged(it)) },
                 label = { Text("Quantity") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
-                value = state.unitInput,
+                value = form.unit,
                 onValueChange = { onIntent(PantryIntent.UnitChanged(it)) },
                 label = { Text("Unit") },
                 modifier = Modifier.fillMaxWidth()
@@ -65,7 +68,7 @@ fun AddPantryItemSheet(
 
             PantryDropdownField(
                 label = "Location",
-                value = state.locationInput,
+                value = form.location,
                 options = state.locationOptions,
                 expanded = state.isLocationDropdownExpanded,
                 onExpandedChange = { expanded ->
@@ -82,7 +85,7 @@ fun AddPantryItemSheet(
 
             PantryDropdownField(
                 label = "Category",
-                value = state.categoryInput,
+                value = form.category,
                 options = state.categoryOptions,
                 expanded = state.isCategoryDropdownExpanded,
                 onExpandedChange = { expanded ->
@@ -101,7 +104,7 @@ fun AddPantryItemSheet(
                 onClick = { onIntent(PantryIntent.ShowDatePicker) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Expiration: ${DateUtils.formatDate(state.expirationDate)}")
+                Text("Expiration: ${DateUtils.formatDate(form.expirationDate)}")
             }
 
             state.errorMessage?.let { message ->
@@ -112,10 +115,10 @@ fun AddPantryItemSheet(
             }
 
             Button(
-                onClick = { onIntent(PantryIntent.SaveItem) },
+                onClick = { onIntent(PantryIntent.SaveClicked) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Save item")
+                Text(if (form.id == null) "Save item" else "Update item")
             }
 
             Spacer(Modifier.height(16.dp))

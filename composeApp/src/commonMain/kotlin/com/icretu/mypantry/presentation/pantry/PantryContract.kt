@@ -1,18 +1,18 @@
 package com.icretu.mypantry.presentation.pantry
 
+import com.icretu.mypantry.presentation.pantry.model.PantryItemFormState
 import kotlinx.datetime.LocalDate
 
 data class PantryState(
     val items: List<PantryItemUiModel> = emptyList(),
     val isLoading: Boolean = true,
     val errorMessage: String? = null,
-    val isAddSheetVisible: Boolean = false,
 
-    val nameInput: String = "",
-    val quantityInput: String = "",
-    val unitInput: String = "pcs",
+    val searchQuery: String = "",
 
-    val locationInput: String = "Pantry",
+    val isFormVisible: Boolean = false,
+    val form: PantryItemFormState = PantryItemFormState(),
+
     val locationOptions: List<String> = listOf(
         "Pantry",
         "Freezer",
@@ -21,7 +21,6 @@ data class PantryState(
     ),
     val isLocationDropdownExpanded: Boolean = false,
 
-    val categoryInput: String = "Essentials",
     val categoryOptions: List<String> = listOf(
         "Essentials",
         "Frozen food",
@@ -32,14 +31,20 @@ data class PantryState(
     val isCategoryDropdownExpanded: Boolean = false,
 
     val isDatePickerVisible: Boolean = false,
-    val expirationDate: LocalDate? = null,
 
-    val searchQuery: String = "",
 )
 
 sealed interface PantryIntent {
-    data object ShowAddSheet : PantryIntent
-    data object HideAddSheet : PantryIntent
+    data object AddClicked : PantryIntent
+    data class ItemClicked(val item: PantryItemUiModel) : PantryIntent
+    data object FormDismissed : PantryIntent
+
+    data class NameChanged(val value: String) : PantryIntent
+    data class QuantityChanged(val value: String) : PantryIntent
+    data class UnitChanged(val value: String) : PantryIntent
+    data class StoreNameChanged(val value: String) : PantryIntent
+    data class PriceChanged(val value: String) : PantryIntent
+    data class NotesChanged(val value: String) : PantryIntent
 
     data object ShowLocationDropdown : PantryIntent
     data object HideLocationDropdown : PantryIntent
@@ -53,12 +58,8 @@ sealed interface PantryIntent {
     data object HideDatePicker : PantryIntent
     data class ExpirationDateSelected(val date: LocalDate?) : PantryIntent
 
-    data class NameChanged(val value: String) : PantryIntent
-    data class QuantityChanged(val value: String) : PantryIntent
-    data class UnitChanged(val value: String) : PantryIntent
-
     data class SearchChanged(val value: String) : PantryIntent
 
-    data object SaveItem : PantryIntent
+    data object SaveClicked : PantryIntent
     data class DeleteItem(val item: PantryItemUiModel) : PantryIntent
 }

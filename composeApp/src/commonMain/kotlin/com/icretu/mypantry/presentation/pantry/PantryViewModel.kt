@@ -6,6 +6,8 @@ import com.icretu.mypantry.domain.model.PantryItem
 import com.icretu.mypantry.domain.usecase.AddPantryItemUseCase
 import com.icretu.mypantry.domain.usecase.DeletePantryItemUseCase
 import com.icretu.mypantry.domain.usecase.ObservePantryItemsUseCase
+import com.icretu.mypantry.domain.usecase.UpdatePantryItemUseCase
+import com.icretu.mypantry.presentation.pantry.model.PantryItemFormState
 import com.icretu.mypantry.utils.updateState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,9 +17,9 @@ import kotlinx.coroutines.launch
 class PantryViewModel(
     private val observePantryItemsUseCase: ObservePantryItemsUseCase,
     private val addPantryItemUseCase: AddPantryItemUseCase,
-    private val deletePantryItemUseCase: DeletePantryItemUseCase
+    private val updatePantryItemUseCase: UpdatePantryItemUseCase,
+    private val deletePantryItemUseCase: DeletePantryItemUseCase,
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(PantryState())
     val state: StateFlow<PantryState> = _state.asStateFlow()
 
@@ -27,9 +29,29 @@ class PantryViewModel(
 
     fun onIntent(intent: PantryIntent) {
         when (intent) {
-            PantryIntent.ShowAddSheet -> showAddSheet()
+            PantryIntent.AddClicked -> openAddForm()
 
-            PantryIntent.HideAddSheet -> hideAddSheet()
+            is PantryIntent.ItemClicked -> openEditForm(intent.item)
+
+            PantryIntent.FormDismissed -> closeForm()
+
+            is PantryIntent.NameChanged ->
+                updateForm { copy(name = intent.value) }
+
+            is PantryIntent.QuantityChanged ->
+                updateForm { copy(quantity = intent.value) }
+
+            is PantryIntent.UnitChanged ->
+                updateForm { copy(unit = intent.value) }
+
+            is PantryIntent.StoreNameChanged ->
+                updateForm { copy(storeName = intent.value) }
+
+            is PantryIntent.PriceChanged ->
+                updateForm { copy(price = intent.value) }
+
+            is PantryIntent.NotesChanged ->
+                updateForm { copy(notes = intent.value) }
 
             PantryIntent.ShowLocationDropdown ->
                 _state.updateState { copy(isLocationDropdownExpanded = true) }
@@ -40,7 +62,7 @@ class PantryViewModel(
             is PantryIntent.LocationSelected ->
                 _state.updateState {
                     copy(
-                        locationInput = intent.value,
+                        form = form.copy(location = intent.value),
                         isLocationDropdownExpanded = false
                     )
                 }
@@ -54,20 +76,10 @@ class PantryViewModel(
             is PantryIntent.CategorySelected ->
                 _state.updateState {
                     copy(
-                        categoryInput = intent.value,
+                        form = form.copy(category = intent.value),
                         isCategoryDropdownExpanded = false
                     )
                 }
-
-            is PantryIntent.NameChanged -> _state.updateState { copy(nameInput = intent.value) }
-
-            is PantryIntent.QuantityChanged -> _state.updateState { copy(quantityInput = intent.value) }
-
-            is PantryIntent.UnitChanged -> _state.updateState { copy(unitInput = intent.value) }
-
-            PantryIntent.SaveItem -> saveItem()
-
-            is PantryIntent.DeleteItem -> deleteItem(intent.item)
 
             PantryIntent.ShowDatePicker ->
                 _state.updateState { copy(isDatePickerVisible = true) }
@@ -78,75 +90,119 @@ class PantryViewModel(
             is PantryIntent.ExpirationDateSelected ->
                 _state.updateState {
                     copy(
-                        expirationDate = intent.date,
+                        form = form.copy(expirationDate = intent.date),
                         isDatePickerVisible = false
                     )
                 }
 
             is PantryIntent.SearchChanged ->
                 _state.updateState { copy(searchQuery = intent.value) }
+
+            PantryIntent.SaveClicked -> saveForm()
+
+            is PantryIntent.DeleteItem -> deleteItem(intent.item)
         }
     }
 
-    private fun showAddSheet() {
-        _state.updateState {
+    private fun openAddForm() {
+        updateState {
             copy(
-                isAddSheetVisible = true,
+                isFormVisible = true,
+                form = PantryItemFormState(),
                 errorMessage = null
             )
         }
     }
 
-    private fun hideAddSheet() {
-        _state.updateState {
+    private fun openEditForm(item: PantryItemUiModel) {
+        updateState {
             copy(
-                isAddSheetVisible = false,
+                isFormVisible = true,
+                form = PantryItemFormState(
+                    id = item.id,
+                    name = item.name,
+                    quantity = item.quantity,
+                    unit = item.unit,
+                    location = item.location,
+                    category = item.category,
+                    expirationDate = item.expirationDate,
+                    storeName = item.storeName.orEmpty(),
+                    price = item.price.orEmpty(),
+                    notes = item.notes.orEmpty()
+                ),
                 errorMessage = null
             )
         }
-
     }
 
-    private fun saveItem() {
-        val currentState = _state.value
-        val quantity = currentState.quantityInput.toIntOrNull()
+    private fun closeForm() {
+        updateState {
+            copy(
+                isFormVisible = false,
+                form = PantryItemFormState(),
+                isDatePickerVisible = false,
+                isLocationDropdownExpanded = false,
+                isCategoryDropdownExpanded = false,
+                errorMessage = null
+            )
+        }
+    }
 
-        if (currentState.nameInput.isBlank()) {
-            _state.updateState { copy(errorMessage = "Name cannot be empty") }
+    private fun saveForm() {
+        val form = _state.value.form
+        val quantity = form.quantity.toIntOrNull()
+        val price = form.price.toDoubleOrNull()
+
+        if (form.name.isBlank()) {
+            updateState { copy(errorMessage = "Name cannot be empty") }
             return
         }
 
         if (quantity == null || quantity <= 0) {
-            _state.updateState { copy(errorMessage = "Quantity must be greater than 0") }
+            updateState { copy(errorMessage = "Quantity must be greater than 0") }
             return
         }
 
         viewModelScope.launch {
-            addPantryItemUseCase(
-                PantryItem(
-                    name = currentState.nameInput.trim(),
-                    quantity = quantity,
-                    unit = currentState.unitInput.trim(),
-                    location = currentState.locationInput.trim(),
-                    category = currentState.categoryInput.trim(),
-                    expirationDate = currentState.expirationDate,
-                )
+            val item = PantryItem(
+                id = form.id ?: 0,
+                name = form.name.trim(),
+                quantity = quantity,
+                unit = form.unit.trim(),
+                location = form.location,
+                category = form.category,
+                expirationDate = form.expirationDate,
+                storeName = form.storeName.takeIf { it.isNotBlank() },
+                price = price,
+                notes = form.notes.takeIf { it.isNotBlank() }
             )
 
-            _state.updateState {
-                copy(
-                    isAddSheetVisible = false,
-                    nameInput = "",
-                    quantityInput = "",
-                    unitInput = "pcs",
-                    locationInput = "Pantry",
-                    categoryInput = "Essentials",
-                    expirationDate = null,
-                    isDatePickerVisible = false,
-                    errorMessage = null,
-                )
+            if (form.id == null) {
+                addPantryItemUseCase(item)
+            } else {
+                updatePantryItemUseCase(item)
             }
+
+            closeForm()
         }
+    }
+
+    private fun updateForm(
+        reducer: PantryItemFormState.() -> PantryItemFormState
+    ) {
+        updateState {
+            copy(form = form.reducer())
+        }
+    }
+
+    private fun deleteItem(item: PantryItemUiModel) {
+        viewModelScope.launch {
+            deletePantryItemUseCase(item.id)
+        }
+    }
+
+    private fun updateState(reducer: PantryState.() -> PantryState) {
+        _state.value = _state.value.reducer()
     }
 
     private fun observeItems() {
@@ -163,9 +219,4 @@ class PantryViewModel(
         }
     }
 
-    private fun deleteItem(item: PantryItemUiModel) {
-        viewModelScope.launch {
-            deletePantryItemUseCase(item.id)
-        }
-    }
 }
