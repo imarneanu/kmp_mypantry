@@ -1,15 +1,19 @@
 package com.icretu.mypantry.data.local
 
+import com.icretu.mypantry.domain.model.Category
 import com.icretu.mypantry.domain.model.PantryItem
+import com.icretu.mypantry.domain.model.StorageLocation
 
-fun PantryItemEntity.toDomain(): PantryItem {
+fun PantryItemWithDetails.toDomain(): PantryItem {
     return PantryItem(
         id = id,
         name = name,
         quantity = quantity,
         unit = unit,
-        location = location,
-        category = category,
+        locationId = locationId,
+        locationName = locationName,
+        categoryId = categoryId,
+        categoryName = categoryName,
         expirationDate = expirationDate,
         storeName = storeName,
         price = price,
@@ -23,11 +27,26 @@ fun PantryItem.toEntity(): PantryItemEntity {
         name = name,
         quantity = quantity,
         unit = unit,
-        location = location,
-        category = category,
+        locationId = locationId,
+        categoryId = categoryId,
         expirationDate = expirationDate,
         storeName = storeName,
         price = price,
         notes = notes
+    )
+}
+
+fun StorageLocationEntity.toDomain(): StorageLocation {
+    return StorageLocation(
+        id = id,
+        name = name,
+        type = type
+    )
+}
+
+fun CategoryEntity.toDomain(): Category {
+    return Category(
+        id = id,
+        name = name
     )
 }

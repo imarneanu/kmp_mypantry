@@ -68,8 +68,11 @@ fun PantryItemFormSheet(
 
             PantryDropdownField(
                 label = "Location",
-                value = form.location,
-                options = state.locationOptions,
+                value = state.locationOptions
+                    .firstOrNull { it.id == state.form.locationId }
+                    ?.name
+                    .orEmpty(),
+                options = state.locationOptions.map { it.id to it.name },
                 expanded = state.isLocationDropdownExpanded,
                 onExpandedChange = { expanded ->
                     onIntent(
@@ -77,16 +80,19 @@ fun PantryItemFormSheet(
                         else PantryIntent.HideLocationDropdown
                     )
                 },
-                onOptionSelected = {
-                    onIntent(PantryIntent.LocationSelected(it))
+                onOptionSelected = { id ->
+                    onIntent(PantryIntent.LocationSelected(id))
                 },
                 modifier = Modifier.fillMaxWidth()
             )
 
             PantryDropdownField(
                 label = "Category",
-                value = form.category,
-                options = state.categoryOptions,
+                value = state.categoryOptions
+                    .firstOrNull { it.id == state.form.categoryId }
+                    ?.name
+                    .orEmpty(),
+                options = state.categoryOptions.map { it.id to it.name },
                 expanded = state.isCategoryDropdownExpanded,
                 onExpandedChange = { expanded ->
                     onIntent(
@@ -94,8 +100,8 @@ fun PantryItemFormSheet(
                         else PantryIntent.HideCategoryDropdown
                     )
                 },
-                onOptionSelected = {
-                    onIntent(PantryIntent.CategorySelected(it))
+                onOptionSelected = { id ->
+                    onIntent(PantryIntent.CategorySelected(id))
                 },
                 modifier = Modifier.fillMaxWidth()
             )

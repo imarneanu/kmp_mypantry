@@ -29,20 +29,20 @@ fun PantryScreen(
     state: PantryState,
     onIntent: (PantryIntent) -> Unit
 ) {
-    val visibleItems = state.items
-        .filter { item ->
-            state.searchQuery.isBlank() ||
-                    item.name.contains(state.searchQuery, ignoreCase = true) ||
-                    item.category.contains(state.searchQuery, ignoreCase = true) ||
-                    item.location.contains(state.searchQuery, ignoreCase = true)
-        }
-        .sortedWith(
-            compareBy<PantryItemUiModel> {
-                it.expirationDate ?: Long.MAX_VALUE
-            }.thenBy { it.name }
-        )
+val visibleItems = state.items
+    .filter { item ->
+        state.searchQuery.isBlank() ||
+            item.name.contains(state.searchQuery, ignoreCase = true) ||
+            item.categoryName.contains(state.searchQuery, ignoreCase = true) ||
+            item.locationName.contains(state.searchQuery, ignoreCase = true)
+    }
+    .sortedWith(
+        compareBy<PantryItemUiModel> {
+            it.expirationDate ?: kotlinx.datetime.LocalDate(9999, 12, 31)
+        }.thenBy { it.name }
+    )
 
-    val groupedItems = visibleItems.groupBy { it.location }
+val groupedItems = visibleItems.groupBy { it.locationName }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when {

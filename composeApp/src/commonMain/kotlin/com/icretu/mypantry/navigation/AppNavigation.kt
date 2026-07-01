@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.icretu.mypantry.presentation.locations.LocationsRoute
 import com.icretu.mypantry.presentation.pantry.PantryRoute
 import com.icretu.mypantry.presentation.placeholder.PlaceholderScreen
 
@@ -74,7 +75,7 @@ fun AppNavigation() {
             }
 
             composable(AppRoute.Locations.route) {
-                PlaceholderScreen("Locations")
+                LocationsRoute()
             }
 
             composable(AppRoute.Categories.route) {

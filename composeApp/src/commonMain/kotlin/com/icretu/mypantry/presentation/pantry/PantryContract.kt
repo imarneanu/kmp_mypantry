@@ -1,5 +1,7 @@
 package com.icretu.mypantry.presentation.pantry
 
+import com.icretu.mypantry.domain.model.Category
+import com.icretu.mypantry.domain.model.StorageLocation
 import com.icretu.mypantry.presentation.pantry.model.PantryItemFormState
 import kotlinx.datetime.LocalDate
 
@@ -13,26 +15,15 @@ data class PantryState(
     val isFormVisible: Boolean = false,
     val form: PantryItemFormState = PantryItemFormState(),
 
-    val locationOptions: List<String> = listOf(
-        "Pantry",
-        "Freezer",
-        "Cupboard",
-        "Bathroom"
-    ),
+    val locationOptions: List<StorageLocation> = emptyList(),
     val isLocationDropdownExpanded: Boolean = false,
 
-    val categoryOptions: List<String> = listOf(
-        "Essentials",
-        "Frozen food",
-        "Tea & coffee",
-        "Toiletries",
-        "Cleaning products"
-    ),
+    val categoryOptions: List<Category> = emptyList(),
     val isCategoryDropdownExpanded: Boolean = false,
 
     val isDatePickerVisible: Boolean = false,
 
-)
+    )
 
 sealed interface PantryIntent {
     data object AddClicked : PantryIntent
@@ -48,11 +39,11 @@ sealed interface PantryIntent {
 
     data object ShowLocationDropdown : PantryIntent
     data object HideLocationDropdown : PantryIntent
-    data class LocationSelected(val value: String) : PantryIntent
+    data class LocationSelected(val id: Long) : PantryIntent
 
     data object ShowCategoryDropdown : PantryIntent
     data object HideCategoryDropdown : PantryIntent
-    data class CategorySelected(val value: String) : PantryIntent
+    data class CategorySelected(val id: Long) : PantryIntent
 
     data object ShowDatePicker : PantryIntent
     data object HideDatePicker : PantryIntent

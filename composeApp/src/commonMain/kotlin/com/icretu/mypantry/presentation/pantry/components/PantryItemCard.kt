@@ -43,8 +43,8 @@ fun PantryItemCard(
             Spacer(Modifier.height(4.dp))
 
             Text(item.quantityText)
-            Text("Location: ${item.location}")
-            Text("Category: ${item.category}")
+            Text("Location: ${item.locationName}")
+            Text("Category: ${item.categoryName}")
 
             Spacer(Modifier.height(4.dp))
 

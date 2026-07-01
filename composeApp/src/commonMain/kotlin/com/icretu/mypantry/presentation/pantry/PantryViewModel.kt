@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.icretu.mypantry.domain.model.PantryItem
 import com.icretu.mypantry.domain.usecase.AddPantryItemUseCase
 import com.icretu.mypantry.domain.usecase.DeletePantryItemUseCase
+import com.icretu.mypantry.domain.usecase.ObserveCategoriesUseCase
+import com.icretu.mypantry.domain.usecase.ObserveLocationsUseCase
 import com.icretu.mypantry.domain.usecase.ObservePantryItemsUseCase
 import com.icretu.mypantry.domain.usecase.UpdatePantryItemUseCase
 import com.icretu.mypantry.presentation.pantry.model.PantryItemFormState
@@ -19,12 +21,16 @@ class PantryViewModel(
     private val addPantryItemUseCase: AddPantryItemUseCase,
     private val updatePantryItemUseCase: UpdatePantryItemUseCase,
     private val deletePantryItemUseCase: DeletePantryItemUseCase,
+    private val observeLocationsUseCase: ObserveLocationsUseCase,
+    private val observeCategoriesUseCase: ObserveCategoriesUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PantryState())
     val state: StateFlow<PantryState> = _state.asStateFlow()
 
     init {
         observeItems()
+        observeLocations()
+        observeCategories()
     }
 
     fun onIntent(intent: PantryIntent) {
@@ -62,7 +68,7 @@ class PantryViewModel(
             is PantryIntent.LocationSelected ->
                 _state.updateState {
                     copy(
-                        form = form.copy(location = intent.value),
+                        form = form.copy(locationId = intent.id),
                         isLocationDropdownExpanded = false
                     )
                 }
@@ -76,7 +82,7 @@ class PantryViewModel(
             is PantryIntent.CategorySelected ->
                 _state.updateState {
                     copy(
-                        form = form.copy(category = intent.value),
+                        form = form.copy(categoryId = intent.id),
                         isCategoryDropdownExpanded = false
                     )
                 }
@@ -105,7 +111,7 @@ class PantryViewModel(
     }
 
     private fun openAddForm() {
-        updateState {
+        _state.updateState {
             copy(
                 isFormVisible = true,
                 form = PantryItemFormState(),
@@ -115,7 +121,7 @@ class PantryViewModel(
     }
 
     private fun openEditForm(item: PantryItemUiModel) {
-        updateState {
+        _state.updateState {
             copy(
                 isFormVisible = true,
                 form = PantryItemFormState(
@@ -123,8 +129,8 @@ class PantryViewModel(
                     name = item.name,
                     quantity = item.quantity,
                     unit = item.unit,
-                    location = item.location,
-                    category = item.category,
+                    locationId = item.locationId,
+                    categoryId = item.categoryId,
                     expirationDate = item.expirationDate,
                     storeName = item.storeName.orEmpty(),
                     price = item.price.orEmpty(),
@@ -136,7 +142,7 @@ class PantryViewModel(
     }
 
     private fun closeForm() {
-        updateState {
+        _state. updateState {
             copy(
                 isFormVisible = false,
                 form = PantryItemFormState(),
@@ -154,14 +160,27 @@ class PantryViewModel(
         val price = form.price.toDoubleOrNull()
 
         if (form.name.isBlank()) {
-            updateState { copy(errorMessage = "Name cannot be empty") }
+            _state.updateState { copy(errorMessage = "Name cannot be empty") }
             return
         }
 
         if (quantity == null || quantity <= 0) {
-            updateState { copy(errorMessage = "Quantity must be greater than 0") }
+            _state.updateState { copy(errorMessage = "Quantity must be greater than 0") }
             return
         }
+
+        if (form.locationId == null) {
+            _state.updateState { copy(errorMessage = "Select a location") }
+            return
+        }
+
+        if (form.categoryId == null) {
+            _state.updateState { copy(errorMessage = "Select a category") }
+            return
+        }
+
+        val location = _state.value.locationOptions.first { it.id == form.locationId }
+        val category = _state.value.categoryOptions.first { it.id == form.categoryId }
 
         viewModelScope.launch {
             val item = PantryItem(
@@ -169,8 +188,10 @@ class PantryViewModel(
                 name = form.name.trim(),
                 quantity = quantity,
                 unit = form.unit.trim(),
-                location = form.location,
-                category = form.category,
+                locationId = location.id,
+                locationName = location.name,
+                categoryId = category.id,
+                categoryName = category.name,
                 expirationDate = form.expirationDate,
                 storeName = form.storeName.takeIf { it.isNotBlank() },
                 price = price,
@@ -190,7 +211,7 @@ class PantryViewModel(
     private fun updateForm(
         reducer: PantryItemFormState.() -> PantryItemFormState
     ) {
-        updateState {
+        _state.updateState {
             copy(form = form.reducer())
         }
     }
@@ -199,10 +220,6 @@ class PantryViewModel(
         viewModelScope.launch {
             deletePantryItemUseCase(item.id)
         }
-    }
-
-    private fun updateState(reducer: PantryState.() -> PantryState) {
-        _state.value = _state.value.reducer()
     }
 
     private fun observeItems() {
@@ -216,6 +233,22 @@ class PantryViewModel(
                         )
                     }
                 }
+        }
+    }
+
+    private fun observeLocations() {
+        viewModelScope.launch {
+            observeLocationsUseCase().collect { locations ->
+                _state.updateState { copy(locationOptions = locations) }
+            }
+        }
+    }
+
+    private fun observeCategories() {
+        viewModelScope.launch {
+            observeCategoriesUseCase().collect { categories ->
+                _state.updateState { copy(categoryOptions = categories) }
+            }
         }
     }
 
