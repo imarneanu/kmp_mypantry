@@ -1,7 +1,11 @@
 package com.icretu.mypantry.navigation
 
 sealed class AppRoute(val route: String) {
+    data object PantryGraph : AppRoute("pantry_graph")
+
     data object Pantry : AppRoute("pantry")
+    data object StockEntryForm : AppRoute("stock_entry_form")
+
     data object Locations : AppRoute("locations")
     data object Categories : AppRoute("categories")
     data object ShoppingList : AppRoute("shopping_list")

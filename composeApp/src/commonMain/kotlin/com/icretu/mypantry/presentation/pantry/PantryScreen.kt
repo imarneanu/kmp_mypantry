@@ -19,9 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.icretu.mypantry.presentation.pantry.components.ExpirationDatePickerDialog
 import com.icretu.mypantry.presentation.pantry.components.StockEntryCard
-import com.icretu.mypantry.presentation.pantry.components.StockEntryFormSheet
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,24 +111,5 @@ fun PantryScreen(
         ) {
             Text("+")
         }
-    }
-
-    if (state.isFormVisible) {
-        StockEntryFormSheet(
-            state = state,
-            onIntent = onIntent
-        )
-    }
-
-    if (state.isDatePickerVisible) {
-        ExpirationDatePickerDialog(
-            selectedDate = state.form.expirationDate,
-            onDateSelected = {
-                onIntent(PantryIntent.ExpirationDateSelected(it))
-            },
-            onDismiss = {
-                onIntent(PantryIntent.HideDatePicker)
-            }
-        )
     }
 }

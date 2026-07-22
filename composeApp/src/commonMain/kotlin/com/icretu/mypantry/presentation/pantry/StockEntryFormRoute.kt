@@ -6,23 +6,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 
 @Composable
-fun PantryRoute(
+fun StockEntryFormRoute(
     viewModel: PantryViewModel,
-    onNavigateToForm: () -> Unit
+    onNavigateBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                PantryEffect.NavigateToForm -> onNavigateToForm()
-                PantryEffect.NavigateBack -> Unit
+                PantryEffect.NavigateBack -> onNavigateBack()
+                PantryEffect.NavigateToForm -> Unit
             }
         }
     }
 
-    PantryScreen(
+    StockEntryFormScreen(
         state = state,
-        onIntent = viewModel::onIntent
+        onIntent = viewModel::onIntent,
+        onBackClick = {
+            viewModel.onIntent(PantryIntent.FormDismissed)
+        }
     )
 }

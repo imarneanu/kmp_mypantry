@@ -10,14 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.icretu.mypantry.presentation.locations.LocationsRoute
 import com.icretu.mypantry.presentation.pantry.PantryRoute
+import com.icretu.mypantry.presentation.pantry.PantryViewModel
+import com.icretu.mypantry.presentation.pantry.StockEntryFormRoute
 import com.icretu.mypantry.presentation.placeholder.PlaceholderScreen
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,52 +32,116 @@ fun AppNavigation() {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
+    val showAppBars = currentRoute != AppRoute.StockEntryForm.route
+
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        when (currentRoute) {
-                            AppRoute.Pantry.route -> "My Pantry"
-                            AppRoute.Locations.route -> "Locations"
-                            AppRoute.Categories.route -> "Categories"
-                            AppRoute.ShoppingList.route -> "Shopping List"
-                            AppRoute.Settings.route -> "Settings"
-                            else -> "My Pantry"
-                        }
-                    )
-                }
-            )
+            if (showAppBars) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            when (currentRoute) {
+                                AppRoute.Pantry.route -> "My Pantry"
+                                AppRoute.Locations.route -> "Locations"
+                                AppRoute.Categories.route -> "Categories"
+                                AppRoute.ShoppingList.route -> "Shopping List"
+                                AppRoute.Settings.route -> "Settings"
+                                else -> "My Pantry"
+                            }
+                        )
+                    }
+                )
+            }
         },
         bottomBar = {
-            NavigationBar {
-                bottomNavItems.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentRoute == item.route.route,
-                        onClick = {
-                            navController.navigate(item.route.route) {
-                                popUpTo(AppRoute.Pantry.route) {
-                                    saveState = true
+            if (showAppBars) {
+                NavigationBar {
+                    bottomNavItems.forEach { item ->
+                        NavigationBarItem(
+                            selected = currentRoute == item.route.route,
+                            onClick = {
+                                navController.navigate(item.route.route) {
+                                    popUpTo(AppRoute.Pantry.route) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = { Text(item.label.first().toString()) },
-                        label = { Text(item.label) }
-                    )
+                            },
+                            icon = { Text(item.label.first().toString()) },
+                            label = { Text(item.label) }
+                        )
+                    }
                 }
             }
         }
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = AppRoute.Pantry.route,
+            startDestination = AppRoute.PantryGraph.route,
             modifier = Modifier.padding(padding)
         ) {
-            composable(AppRoute.Pantry.route) {
-                PantryRoute()
+            navigation(
+                route = AppRoute.PantryGraph.route,
+                startDestination = AppRoute.Pantry.route
+            ) {
+
+                composable(AppRoute.Pantry.route) { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry(
+                            AppRoute.PantryGraph.route
+                        )
+                    }
+
+                    val viewModel: PantryViewModel = koinViewModel(
+                        viewModelStoreOwner = parentEntry
+                    )
+
+                    PantryRoute(
+                        viewModel = viewModel,
+                        onNavigateToForm = {
+                            navController.navigate(
+                                AppRoute.StockEntryForm.route
+                            )
+                        }
+                    )
+                }
+
+                composable(AppRoute.StockEntryForm.route) { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry(
+                            AppRoute.PantryGraph.route
+                        )
+                    }
+
+                    val viewModel: PantryViewModel = koinViewModel(
+                        viewModelStoreOwner = parentEntry
+                    )
+
+                    StockEntryFormRoute(
+                        viewModel = viewModel,
+                        onNavigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
             }
+
+//            composable(AppRoute.Pantry.route) {
+//                PantryRoute(
+//                    onNavigateToForm = {
+//                        navController.navigate(AppRoute.StockEntryForm.route)
+//                    }
+//                )
+//            }
+//
+//            composable(AppRoute.StockEntryForm.route) {
+//                StockEntryFormRoute(
+//                    onNavigateBack = {
+//                        navController.popBackStack()
+//                    }
+//                )
+//            }
 
             composable(AppRoute.Locations.route) {
                 LocationsRoute()

@@ -13,8 +13,10 @@ import com.icretu.mypantry.domain.usecase.UpsertProductUseCase
 import com.icretu.mypantry.domain.usecase.UpsertStockEntryUseCase
 import com.icretu.mypantry.presentation.pantry.model.StockEntryFormState
 import com.icretu.mypantry.utils.updateState
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -29,6 +31,9 @@ class PantryViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(PantryState())
     val state: StateFlow<PantryState> = _state.asStateFlow()
+
+    private val _effects = MutableSharedFlow<PantryEffect>()
+    val effects = _effects.asSharedFlow()
 
     init {
         observeStockEntries()
@@ -82,7 +87,12 @@ class PantryViewModel(
         when (intent) {
             PantryIntent.AddClicked -> openAddForm()
             is PantryIntent.ItemClicked -> openEditForm(intent.item)
-            PantryIntent.FormDismissed -> closeForm()
+            PantryIntent.FormDismissed -> {
+                closeForm()
+                viewModelScope.launch {
+                    _effects.emit(PantryEffect.NavigateBack)
+                }
+            }
 
             is PantryIntent.ProductNameChanged ->
                 updateForm { copy(productName = intent.value, productId = null) }
@@ -179,6 +189,10 @@ class PantryViewModel(
                 errorMessage = null
             )
         }
+
+        viewModelScope.launch {
+            _effects.emit(PantryEffect.NavigateToForm)
+        }
     }
 
     private fun openEditForm(item: StockEntryUiModel) {
@@ -201,6 +215,10 @@ class PantryViewModel(
                 ),
                 errorMessage = null
             )
+        }
+
+        viewModelScope.launch {
+            _effects.emit(PantryEffect.NavigateToForm)
         }
     }
 
@@ -299,6 +317,7 @@ class PantryViewModel(
             )
 
             closeForm()
+            _effects.emit(PantryEffect.NavigateBack)
         }
     }
 

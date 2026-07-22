@@ -65,3 +65,8 @@ sealed interface PantryIntent {
     data object SaveClicked : PantryIntent
     data class DeleteItem(val item: StockEntryUiModel) : PantryIntent
 }
+
+sealed interface PantryEffect {
+    data object NavigateToForm : PantryEffect
+    data object NavigateBack : PantryEffect
+}
