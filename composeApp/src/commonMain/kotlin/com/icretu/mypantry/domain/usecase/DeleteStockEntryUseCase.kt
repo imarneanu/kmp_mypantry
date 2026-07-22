@@ -2,8 +2,8 @@ package com.icretu.mypantry.domain.usecase
 
 import com.icretu.mypantry.domain.repository.PantryRepository
 
-class ObservePantryItemsUseCase(
+class DeleteStockEntryUseCase(
     private val repository: PantryRepository
 ) {
-    operator fun invoke() = repository.observeItems()
+    suspend operator fun invoke(id: Long) = repository.deleteStockEntry(id)
 }

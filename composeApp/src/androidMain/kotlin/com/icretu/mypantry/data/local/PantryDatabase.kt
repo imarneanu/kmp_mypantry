@@ -6,7 +6,8 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [
-        PantryItemEntity::class,
+        ProductEntity::class,
+        StockEntryEntity::class,
         StorageLocationEntity::class,
         CategoryEntity::class,
     ],
@@ -15,7 +16,8 @@ import androidx.room.TypeConverters
 )
 @TypeConverters(LocalDateConverter::class)
 abstract class PantryDatabase : RoomDatabase() {
-    abstract fun pantryItemDao(): PantryItemDao
+    abstract fun productDao(): ProductDao
+    abstract fun stockEntryDao(): StockEntryDao
     abstract fun storageLocationDao(): StorageLocationDao
     abstract fun categoryDao(): CategoryDao
 }

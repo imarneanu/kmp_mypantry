@@ -2,14 +2,16 @@ package com.icretu.mypantry.presentation.pantry
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icretu.mypantry.domain.model.PantryItem
-import com.icretu.mypantry.domain.usecase.AddPantryItemUseCase
-import com.icretu.mypantry.domain.usecase.DeletePantryItemUseCase
+import com.icretu.mypantry.domain.model.Product
+import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.domain.usecase.DeleteStockEntryUseCase
 import com.icretu.mypantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.domain.usecase.ObserveLocationsUseCase
-import com.icretu.mypantry.domain.usecase.ObservePantryItemsUseCase
-import com.icretu.mypantry.domain.usecase.UpdatePantryItemUseCase
-import com.icretu.mypantry.presentation.pantry.model.PantryItemFormState
+import com.icretu.mypantry.domain.usecase.ObserveProductsUseCase
+import com.icretu.mypantry.domain.usecase.ObserveStockEntriesUseCase
+import com.icretu.mypantry.domain.usecase.UpsertProductUseCase
+import com.icretu.mypantry.domain.usecase.UpsertStockEntryUseCase
+import com.icretu.mypantry.presentation.pantry.model.StockEntryFormState
 import com.icretu.mypantry.utils.updateState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,32 +19,79 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class PantryViewModel(
-    private val observePantryItemsUseCase: ObservePantryItemsUseCase,
-    private val addPantryItemUseCase: AddPantryItemUseCase,
-    private val updatePantryItemUseCase: UpdatePantryItemUseCase,
-    private val deletePantryItemUseCase: DeletePantryItemUseCase,
+    private val observeStockEntriesUseCase: ObserveStockEntriesUseCase,
+    private val observeProductsUseCase: ObserveProductsUseCase,
     private val observeLocationsUseCase: ObserveLocationsUseCase,
     private val observeCategoriesUseCase: ObserveCategoriesUseCase,
+    private val upsertProductUseCase: UpsertProductUseCase,
+    private val upsertStockEntryUseCase: UpsertStockEntryUseCase,
+    private val deleteStockEntryUseCase: DeleteStockEntryUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PantryState())
     val state: StateFlow<PantryState> = _state.asStateFlow()
 
     init {
-        observeItems()
+        observeStockEntries()
+        observeProducts()
         observeLocations()
         observeCategories()
+    }
+
+    private fun observeStockEntries() {
+        viewModelScope.launch {
+            observeStockEntriesUseCase()
+                .collect { entries ->
+                    _state.updateState {
+                        copy(
+                            items = entries.map { it.toUiModel() },
+                            isLoading = false,
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun observeProducts() {
+        viewModelScope.launch {
+            observeProductsUseCase()
+                .collect { products ->
+                    _state.updateState {
+                        copy(products = products)
+                    }
+                }
+        }
+    }
+
+    private fun observeLocations() {
+        viewModelScope.launch {
+            observeLocationsUseCase().collect { locations ->
+                _state.updateState { copy(locationOptions = locations) }
+            }
+        }
+    }
+
+    private fun observeCategories() {
+        viewModelScope.launch {
+            observeCategoriesUseCase().collect { categories ->
+                _state.updateState { copy(categoryOptions = categories) }
+            }
+        }
     }
 
     fun onIntent(intent: PantryIntent) {
         when (intent) {
             PantryIntent.AddClicked -> openAddForm()
-
             is PantryIntent.ItemClicked -> openEditForm(intent.item)
-
             PantryIntent.FormDismissed -> closeForm()
 
-            is PantryIntent.NameChanged ->
-                updateForm { copy(name = intent.value) }
+            is PantryIntent.ProductNameChanged ->
+                updateForm { copy(productName = intent.value, productId = null) }
+
+            is PantryIntent.ProductBrandChanged ->
+                updateForm { copy(productBrand = intent.value) }
+
+            is PantryIntent.ProductSelected ->
+                selectProduct(intent.productId)
 
             is PantryIntent.QuantityChanged ->
                 updateForm { copy(quantity = intent.value) }
@@ -58,6 +107,12 @@ class PantryViewModel(
 
             is PantryIntent.NotesChanged ->
                 updateForm { copy(notes = intent.value) }
+
+            PantryIntent.ShowProductDropdown ->
+                _state.updateState { copy(isProductDropdownExpanded = true) }
+
+            PantryIntent.HideProductDropdown ->
+                _state.updateState { copy(isProductDropdownExpanded = false) }
 
             PantryIntent.ShowLocationDropdown ->
                 _state.updateState { copy(isLocationDropdownExpanded = true) }
@@ -111,23 +166,31 @@ class PantryViewModel(
     }
 
     private fun openAddForm() {
+        val defaultLocationId = _state.value.locationOptions.firstOrNull()?.id
+        val defaultCategoryId = _state.value.categoryOptions.firstOrNull()?.id
+
         _state.updateState {
             copy(
                 isFormVisible = true,
-                form = PantryItemFormState(),
+                form = StockEntryFormState(
+                    locationId = defaultLocationId,
+                    categoryId = defaultCategoryId,
+                ),
                 errorMessage = null
             )
         }
     }
 
-    private fun openEditForm(item: PantryItemUiModel) {
+    private fun openEditForm(item: StockEntryUiModel) {
         _state.updateState {
             copy(
                 isFormVisible = true,
-                form = PantryItemFormState(
-                    id = item.id,
-                    name = item.name,
-                    quantity = item.quantity,
+                form = StockEntryFormState(
+                    stockEntryId = item.id,
+                    productId = item.productId,
+                    productName = item.productName,
+                    productBrand = item.productBrand.orEmpty(),
+                    quantity = item.quantity.toString(),
                     unit = item.unit,
                     locationId = item.locationId,
                     categoryId = item.categoryId,
@@ -142,14 +205,31 @@ class PantryViewModel(
     }
 
     private fun closeForm() {
-        _state. updateState {
+        _state.updateState {
             copy(
                 isFormVisible = false,
-                form = PantryItemFormState(),
+                form = StockEntryFormState(),
                 isDatePickerVisible = false,
                 isLocationDropdownExpanded = false,
                 isCategoryDropdownExpanded = false,
                 errorMessage = null
+            )
+        }
+    }
+
+    private fun selectProduct(productId: Long) {
+        val product = _state.value.products.firstOrNull { it.id == productId } ?: return
+
+        _state.updateState {
+            copy(
+                form = form.copy(
+                    productId = product.id,
+                    productName = product.name,
+                    productBrand = product.brand.orEmpty(),
+                    categoryId = product.categoryId,
+                    unit = product.defaultUnit
+                ),
+                isProductDropdownExpanded = false
             )
         }
     }
@@ -159,8 +239,8 @@ class PantryViewModel(
         val quantity = form.quantity.toIntOrNull()
         val price = form.price.toDoubleOrNull()
 
-        if (form.name.isBlank()) {
-            _state.updateState { copy(errorMessage = "Name cannot be empty") }
+        if (form.productName.isBlank()) {
+            _state.updateState { copy(errorMessage = "Product name cannot be empty") }
             return
         }
 
@@ -179,76 +259,60 @@ class PantryViewModel(
             return
         }
 
-        val location = _state.value.locationOptions.first { it.id == form.locationId }
-        val category = _state.value.categoryOptions.first { it.id == form.categoryId }
-
         viewModelScope.launch {
-            val item = PantryItem(
-                id = form.id ?: 0,
-                name = form.name.trim(),
-                quantity = quantity,
-                unit = form.unit.trim(),
-                locationId = location.id,
-                locationName = location.name,
-                categoryId = category.id,
-                categoryName = category.name,
-                expirationDate = form.expirationDate,
-                storeName = form.storeName.takeIf { it.isNotBlank() },
-                price = price,
-                notes = form.notes.takeIf { it.isNotBlank() }
+            val productId = form.productId ?: upsertProductUseCase(
+                Product(
+                    name = form.productName.trim(),
+                    brand = form.productBrand.takeIf { it.isNotBlank() },
+                    categoryId = form.categoryId,
+                    categoryName = _state.value.categoryOptions
+                        .firstOrNull { it.id == form.categoryId }
+                        ?.name
+                        .orEmpty(),
+                    defaultUnit = form.unit.trim()
+                )
             )
 
-            if (form.id == null) {
-                addPantryItemUseCase(item)
-            } else {
-                updatePantryItemUseCase(item)
-            }
+            upsertStockEntryUseCase(
+                StockEntry(
+                    id = form.stockEntryId ?: 0,
+                    productId = productId,
+                    productName = form.productName.trim(),
+                    productBrand = form.productBrand.takeIf { it.isNotBlank() },
+                    categoryId = form.categoryId,
+                    categoryName = _state.value.categoryOptions
+                        .firstOrNull { it.id == form.categoryId }
+                        ?.name
+                        .orEmpty(),
+                    quantity = quantity,
+                    unit = form.unit.trim(),
+                    locationId = form.locationId,
+                    locationName = _state.value.locationOptions
+                        .firstOrNull { it.id == form.locationId }
+                        ?.name
+                        .orEmpty(),
+                    expirationDate = form.expirationDate,
+                    storeName = form.storeName.takeIf { it.isNotBlank() },
+                    price = price,
+                    notes = form.notes.takeIf { it.isNotBlank() }
+                )
+            )
 
             closeForm()
         }
     }
 
+    private fun deleteItem(item: StockEntryUiModel) {
+        viewModelScope.launch {
+            deleteStockEntryUseCase(item.id)
+        }
+    }
+
     private fun updateForm(
-        reducer: PantryItemFormState.() -> PantryItemFormState
+        reducer: StockEntryFormState.() -> StockEntryFormState
     ) {
         _state.updateState {
             copy(form = form.reducer())
-        }
-    }
-
-    private fun deleteItem(item: PantryItemUiModel) {
-        viewModelScope.launch {
-            deletePantryItemUseCase(item.id)
-        }
-    }
-
-    private fun observeItems() {
-        viewModelScope.launch {
-            observePantryItemsUseCase()
-                .collect { items ->
-                    _state.updateState {
-                        copy(
-                            items = items.map { it.toUiModel() },
-                            isLoading = false
-                        )
-                    }
-                }
-        }
-    }
-
-    private fun observeLocations() {
-        viewModelScope.launch {
-            observeLocationsUseCase().collect { locations ->
-                _state.updateState { copy(locationOptions = locations) }
-            }
-        }
-    }
-
-    private fun observeCategories() {
-        viewModelScope.launch {
-            observeCategoriesUseCase().collect { categories ->
-                _state.updateState { copy(categoryOptions = categories) }
-            }
         }
     }
 

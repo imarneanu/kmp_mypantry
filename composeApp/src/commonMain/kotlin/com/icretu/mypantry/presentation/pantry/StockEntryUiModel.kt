@@ -2,38 +2,42 @@ package com.icretu.mypantry.presentation.pantry
 
 import com.icretu.mypantry.domain.model.ExpiryColor
 import com.icretu.mypantry.domain.model.ExpiryStatus
-import com.icretu.mypantry.domain.model.PantryItem
+import com.icretu.mypantry.domain.model.StockEntry
 import com.icretu.mypantry.domain.model.toExpiryStatus
 import com.icretu.mypantry.utils.DateUtils
 import kotlinx.datetime.LocalDate
 
-data class PantryItemUiModel(
+data class StockEntryUiModel(
     val id: Long,
-    val name: String,
-    val quantity: String,
+    val productId: Long,
+    val productName: String,
+    val productBrand: String?,
+    val quantity: Int,
     val unit: String,
+    val quantityText: String,
     val locationId: Long,
     val locationName: String,
     val categoryId: Long,
     val categoryName: String,
-    val expirationDate: LocalDate? = null,
+    val expirationDate: LocalDate?,
     val expirationText: String,
     val expirationColor: ExpiryColor,
     val storeName: String?,
     val price: String?,
     val notes: String?,
-) {
-    val quantityText = "${this.quantity} ${this.unit}"
-}
+)
 
-fun PantryItem.toUiModel(): PantryItemUiModel {
+fun StockEntry.toUiModel(): StockEntryUiModel {
     val status = this.expirationDate.toExpiryStatus()
 
-    return PantryItemUiModel(
+    return StockEntryUiModel(
         id = this.id,
-        name = this.name,
-        quantity = this.quantity.toString(),
+        productId = this.productId,
+        productName = buildName(this),
+        productBrand = this.productBrand,
+        quantity = this.quantity,
         unit = this.unit,
+        quantityText = "${this.quantity} ${this.unit}",
         locationId = this.locationId,
         locationName = this.locationName,
         categoryId = this.categoryId,
@@ -52,7 +56,15 @@ fun PantryItem.toUiModel(): PantryItemUiModel {
             ExpiryStatus.EXPIRED -> ExpiryColor.ERROR
         },
         storeName = this.storeName,
-        price = this.price.toString(),
+        price = "${this.price}",
         notes = this.notes,
     )
+}
+
+private fun buildName(entry: StockEntry): String {
+    return if (entry.productBrand.isNullOrBlank()) {
+        entry.productName
+    } else {
+        "${entry.productName} (${entry.productBrand})"
+    }
 }

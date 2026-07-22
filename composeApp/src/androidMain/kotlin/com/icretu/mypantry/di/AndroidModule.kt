@@ -19,7 +19,8 @@ val androidModule = module {
         ).build()
     }
 
-    single { get<PantryDatabase>().pantryItemDao() }
+    single { get<PantryDatabase>().productDao() }
+    single { get<PantryDatabase>().stockEntryDao() }
     single { get<PantryDatabase>().storageLocationDao() }
     single { get<PantryDatabase>().categoryDao() }
 

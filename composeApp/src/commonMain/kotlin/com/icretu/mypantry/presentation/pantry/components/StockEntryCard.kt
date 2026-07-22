@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.icretu.mypantry.domain.model.ExpiryColor
-import com.icretu.mypantry.presentation.pantry.PantryItemUiModel
+import com.icretu.mypantry.presentation.pantry.StockEntryUiModel
 
 @Composable
-fun PantryItemCard(
-    item: PantryItemUiModel,
+fun StockEntryCard(
+    item: StockEntryUiModel,
     onClick: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -36,7 +36,7 @@ fun PantryItemCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = item.name,
+                text = item.productName,
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -53,7 +53,6 @@ fun PantryItemCard(
                 color = color
             )
 
-            Spacer(Modifier.height(8.dp))
             Spacer(Modifier.height(8.dp))
 
             TextButton(onClick = onDelete) {

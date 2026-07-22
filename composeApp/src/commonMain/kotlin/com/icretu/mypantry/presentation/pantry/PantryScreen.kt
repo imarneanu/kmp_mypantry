@@ -20,8 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.icretu.mypantry.presentation.pantry.components.ExpirationDatePickerDialog
-import com.icretu.mypantry.presentation.pantry.components.PantryItemCard
-import com.icretu.mypantry.presentation.pantry.components.PantryItemFormSheet
+import com.icretu.mypantry.presentation.pantry.components.StockEntryCard
+import com.icretu.mypantry.presentation.pantry.components.StockEntryFormSheet
+import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,20 +30,21 @@ fun PantryScreen(
     state: PantryState,
     onIntent: (PantryIntent) -> Unit
 ) {
-val visibleItems = state.items
-    .filter { item ->
-        state.searchQuery.isBlank() ||
-            item.name.contains(state.searchQuery, ignoreCase = true) ||
-            item.categoryName.contains(state.searchQuery, ignoreCase = true) ||
-            item.locationName.contains(state.searchQuery, ignoreCase = true)
-    }
-    .sortedWith(
-        compareBy<PantryItemUiModel> {
-            it.expirationDate ?: kotlinx.datetime.LocalDate(9999, 12, 31)
-        }.thenBy { it.name }
-    )
+    val visibleItems = state.items
+        .filter { item ->
+            state.searchQuery.isBlank() ||
+                    item.productName.contains(state.searchQuery, ignoreCase = true) ||
+                    item.categoryName.contains(state.searchQuery, ignoreCase = true) ||
+                    item.locationName.contains(state.searchQuery, ignoreCase = true)
+        }
+        .sortedWith(
+            compareBy<StockEntryUiModel> {
+                it.expirationDate
+                    ?: LocalDate(9999, 12, 31)
+            }.thenBy { it.productName }
+        )
 
-val groupedItems = visibleItems.groupBy { it.locationName }
+    val groupedItems = visibleItems.groupBy { it.locationName }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when {
@@ -87,7 +89,7 @@ val groupedItems = visibleItems.groupBy { it.locationName }
                                 )
                             }
                             items(items) { item ->
-                                PantryItemCard(
+                                StockEntryCard(
                                     item = item,
                                     onClick = {
                                         onIntent(PantryIntent.ItemClicked(item))
@@ -114,7 +116,7 @@ val groupedItems = visibleItems.groupBy { it.locationName }
     }
 
     if (state.isFormVisible) {
-        PantryItemFormSheet(
+        StockEntryFormSheet(
             state = state,
             onIntent = onIntent
         )

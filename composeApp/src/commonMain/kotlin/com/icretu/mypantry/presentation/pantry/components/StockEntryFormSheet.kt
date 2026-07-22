@@ -22,12 +22,12 @@ import com.icretu.mypantry.utils.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantryItemFormSheet(
+fun StockEntryFormSheet(
     state: PantryState,
     onIntent: (PantryIntent) -> Unit
 ) {
     val form = state.form
-    val title = if (form.id == null) "Add item" else "Edit item"
+    val isEditing = form.stockEntryId != null
 
     ModalBottomSheet(
         onDismissRequest = {
@@ -41,14 +41,37 @@ fun PantryItemFormSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = title,
+                text = if (isEditing) "Edit stock entry" else "Add stock entry",
                 style = MaterialTheme.typography.titleLarge
             )
 
+            ProductSelectorField(
+                value = form.productName,
+                products = state.products,
+                expanded = state.isProductDropdownExpanded,
+                onValueChange = {
+                    onIntent(PantryIntent.ProductNameChanged(it))
+                },
+                onExpandedChange = { expanded ->
+                    onIntent(
+                        if (expanded) {
+                            PantryIntent.ShowProductDropdown
+                        } else {
+                            PantryIntent.HideProductDropdown
+                        }
+                    )
+                },
+                onProductSelected = { productId ->
+                    onIntent(PantryIntent.ProductSelected(productId))
+                }
+            )
+
             OutlinedTextField(
-                value = form.name,
-                onValueChange = { onIntent(PantryIntent.NameChanged(it)) },
-                label = { Text("Name") },
+                value = form.productBrand,
+                onValueChange = {
+                    onIntent(PantryIntent.ProductBrandChanged(it))
+                },
+                label = { Text("Brand") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -113,6 +136,33 @@ fun PantryItemFormSheet(
                 Text("Expiration: ${DateUtils.formatDate(form.expirationDate)}")
             }
 
+            OutlinedTextField(
+                value = form.storeName,
+                onValueChange = {
+                    onIntent(PantryIntent.StoreNameChanged(it))
+                },
+                label = { Text("Store") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = form.price,
+                onValueChange = {
+                    onIntent(PantryIntent.PriceChanged(it))
+                },
+                label = { Text("Price") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = form.notes,
+                onValueChange = {
+                    onIntent(PantryIntent.NotesChanged(it))
+                },
+                label = { Text("Notes") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
             state.errorMessage?.let { message ->
                 Text(
                     text = message,
@@ -124,7 +174,13 @@ fun PantryItemFormSheet(
                 onClick = { onIntent(PantryIntent.SaveClicked) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(if (form.id == null) "Save item" else "Update item")
+                Text(
+                    if (isEditing) {
+                        "Update stock entry"
+                    } else {
+                        "Save stock entry"
+                    }
+                )
             }
 
             Spacer(Modifier.height(16.dp))
