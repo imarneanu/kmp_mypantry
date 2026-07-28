@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "677293931080",
+    "project_id": "kmp-mypantry",
+    "storage_bucket": "kmp-mypantry.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677293931080:android:595d9af4c46e88165d767d",
+        "android_client_info": {
+          "package_name": "com.icretu.mypantry"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAZEzv8vijNzBG7Xd8-oMiIznNviLmoV8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
