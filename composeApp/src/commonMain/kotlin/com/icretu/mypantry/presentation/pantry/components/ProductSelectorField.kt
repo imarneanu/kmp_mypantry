@@ -20,7 +20,7 @@ fun ProductSelectorField(
     expanded: Boolean,
     onValueChange: (String) -> Unit,
     onExpandedChange: (Boolean) -> Unit,
-    onProductSelected: (Long) -> Unit
+    onProductSelected: (String) -> Unit
 ) {
     val matchingProducts = products.filter {
         value.isBlank() ||

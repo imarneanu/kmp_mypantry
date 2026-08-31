@@ -12,7 +12,7 @@ interface PantryRepository {
     fun observeLocations(): Flow<List<StorageLocation>>
     fun observeCategories(): Flow<List<Category>>
 
-    suspend fun upsertProduct(product: Product): Long
+    suspend fun upsertProduct(product: Product): String
     suspend fun upsertStockEntry(entry: StockEntry)
-    suspend fun deleteStockEntry(id: Long)
+    suspend fun deleteStockEntry(id: String)
 }

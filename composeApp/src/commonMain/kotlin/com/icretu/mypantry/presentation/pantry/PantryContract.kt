@@ -37,7 +37,7 @@ sealed interface PantryIntent {
 
     data class ProductNameChanged(val value: String) : PantryIntent
     data class ProductBrandChanged(val value: String) : PantryIntent
-    data class ProductSelected(val productId: Long) : PantryIntent
+    data class ProductSelected(val productId: String) : PantryIntent
 
     data class QuantityChanged(val value: String) : PantryIntent
     data class UnitChanged(val value: String) : PantryIntent
@@ -50,11 +50,11 @@ sealed interface PantryIntent {
 
     data object ShowLocationDropdown : PantryIntent
     data object HideLocationDropdown : PantryIntent
-    data class LocationSelected(val id: Long) : PantryIntent
+    data class LocationSelected(val id: String) : PantryIntent
 
     data object ShowCategoryDropdown : PantryIntent
     data object HideCategoryDropdown : PantryIntent
-    data class CategorySelected(val id: Long) : PantryIntent
+    data class CategorySelected(val id: String) : PantryIntent
 
     data object ShowDatePicker : PantryIntent
     data object HideDatePicker : PantryIntent

@@ -1,24 +1,18 @@
 package com.icretu.mypantry.domain.model
 
 import com.icretu.mypantry.data.remote.model.RemoteStockEntry
+import com.icretu.mypantry.domain.sync.SyncStatus
 import kotlinx.datetime.LocalDate
 
-data class StockEntry(
+data class StockEntryRecord(
     val id: String,
     val householdId: String,
 
     val productId: String,
-    val productName: String,
-    val productBrand: String? = null,
-
-    val categoryId: String,
-    val categoryName: String,
+    val locationId: String,
 
     val quantity: Int,
     val unit: String,
-
-    val locationId: String,
-    val locationName: String,
 
     val expirationDate: LocalDate? = null,
     val purchaseDate: LocalDate? = null,
@@ -28,16 +22,19 @@ data class StockEntry(
 
     val updatedAtEpochMillis: Long,
     val updatedBy: String,
+
+    val syncStatus: SyncStatus,
+    val isDeleted: Boolean,
 )
 
-fun StockEntry.toRemote(): RemoteStockEntry =
+fun StockEntryRecord.toRemote(): RemoteStockEntry =
     RemoteStockEntry(
         id = id,
         householdId = householdId,
         productId = productId,
+        locationId = locationId,
         quantity = quantity,
         unit = unit,
-        locationId = locationId,
         expirationDate = expirationDate?.toString(),
         purchaseDate = purchaseDate?.toString(),
         storeName = storeName,
@@ -45,4 +42,5 @@ fun StockEntry.toRemote(): RemoteStockEntry =
         notes = notes,
         updatedAtEpochMillis = updatedAtEpochMillis,
         updatedBy = updatedBy,
+        isDeleted = isDeleted,
     )

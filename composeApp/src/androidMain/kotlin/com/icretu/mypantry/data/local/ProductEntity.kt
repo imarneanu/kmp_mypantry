@@ -6,11 +6,11 @@ import com.icretu.mypantry.domain.model.Product
 
 @Entity(tableName = "products")
 data class ProductEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey
+    val id: String,
     val name: String,
     val brand: String? = null,
-    val categoryId: Long,
+    val categoryId: String,
     val defaultUnit: String = "pcs",
     val barcode: String? = null,
     val notes: String? = null

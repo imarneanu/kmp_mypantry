@@ -1,6 +1,7 @@
 package com.icretu.mypantry.data.local
 
 import androidx.room.*
+import com.icretu.mypantry.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,6 +24,6 @@ interface ProductDao {
     )
     suspend fun findByName(name: String): ProductEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(product: ProductEntity): Long
+    @Upsert
+    suspend fun upsert(product: ProductEntity)
 }

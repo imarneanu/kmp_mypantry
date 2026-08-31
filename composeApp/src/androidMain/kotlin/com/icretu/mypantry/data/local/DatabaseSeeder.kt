@@ -1,17 +1,20 @@
 package com.icretu.mypantry.data.local
 
+import com.icretu.mypantry.domain.util.IdGenerator
+
 class DatabaseSeeder(
     private val storageLocationDao: StorageLocationDao,
-    private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao,
+    private val idGenerator: IdGenerator,
 ) {
     suspend fun seedIfNeeded() {
         if (storageLocationDao.count() == 0) {
             storageLocationDao.insertAll(
                 listOf(
-                    StorageLocationEntity(name = "Pantry", type = "Pantry"),
-                    StorageLocationEntity(name = "Freezer", type = "Freezer"),
-                    StorageLocationEntity(name = "Cupboard", type = "Cupboard"),
-                    StorageLocationEntity(name = "Bathroom", type = "Bathroom")
+                    StorageLocationEntity(id = idGenerator.generate(), name = "Pantry", type = "Pantry"),
+                    StorageLocationEntity(id = idGenerator.generate(), name = "Freezer", type = "Freezer"),
+                    StorageLocationEntity(id = idGenerator.generate(), name = "Cupboard", type = "Cupboard"),
+                    StorageLocationEntity(id = idGenerator.generate(), name = "Bathroom", type = "Bathroom")
                 )
             )
         }
@@ -19,11 +22,11 @@ class DatabaseSeeder(
         if (categoryDao.count() == 0) {
             categoryDao.insertAll(
                 listOf(
-                    CategoryEntity(name = "Essentials"),
-                    CategoryEntity(name = "Frozen food"),
-                    CategoryEntity(name = "Tea & coffee"),
-                    CategoryEntity(name = "Toiletries"),
-                    CategoryEntity(name = "Cleaning products")
+                    CategoryEntity(id = idGenerator.generate(), name = "Essentials"),
+                    CategoryEntity(id = idGenerator.generate(), name = "Frozen food"),
+                    CategoryEntity(id = idGenerator.generate(), name = "Tea & coffee"),
+                    CategoryEntity(id = idGenerator.generate(), name = "Toiletries"),
+                    CategoryEntity(id = idGenerator.generate(), name = "Cleaning products")
                 )
             )
         }

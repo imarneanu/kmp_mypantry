@@ -5,5 +5,5 @@ import com.icretu.mypantry.domain.repository.PantryRepository
 class DeleteStockEntryUseCase(
     private val repository: PantryRepository
 ) {
-    suspend operator fun invoke(id: Long) = repository.deleteStockEntry(id)
+    suspend operator fun invoke(id: String) = repository.deleteStockEntry(id)
 }

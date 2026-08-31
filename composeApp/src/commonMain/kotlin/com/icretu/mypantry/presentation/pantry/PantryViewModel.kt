@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icretu.mypantry.domain.model.Product
 import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.domain.session.UserSession
 import com.icretu.mypantry.domain.usecase.DeleteStockEntryUseCase
 import com.icretu.mypantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.domain.usecase.ObserveLocationsUseCase
@@ -11,6 +12,8 @@ import com.icretu.mypantry.domain.usecase.ObserveProductsUseCase
 import com.icretu.mypantry.domain.usecase.ObserveStockEntriesUseCase
 import com.icretu.mypantry.domain.usecase.UpsertProductUseCase
 import com.icretu.mypantry.domain.usecase.UpsertStockEntryUseCase
+import com.icretu.mypantry.domain.util.IdGenerator
+import com.icretu.mypantry.domain.util.TimestampProvider
 import com.icretu.mypantry.presentation.pantry.model.StockEntryFormState
 import com.icretu.mypantry.utils.updateState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,6 +31,9 @@ class PantryViewModel(
     private val upsertProductUseCase: UpsertProductUseCase,
     private val upsertStockEntryUseCase: UpsertStockEntryUseCase,
     private val deleteStockEntryUseCase: DeleteStockEntryUseCase,
+    private val idGenerator: IdGenerator,
+    private val timestampProvider: TimestampProvider,
+    private val userSession: UserSession,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PantryState())
     val state: StateFlow<PantryState> = _state.asStateFlow()
@@ -235,7 +241,7 @@ class PantryViewModel(
         }
     }
 
-    private fun selectProduct(productId: Long) {
+    private fun selectProduct(productId: String) {
         val product = _state.value.products.firstOrNull { it.id == productId } ?: return
 
         _state.updateState {
@@ -280,6 +286,7 @@ class PantryViewModel(
         viewModelScope.launch {
             val productId = form.productId ?: upsertProductUseCase(
                 Product(
+                    id = idGenerator.generate(),
                     name = form.productName.trim(),
                     brand = form.productBrand.takeIf { it.isNotBlank() },
                     categoryId = form.categoryId,
@@ -293,7 +300,8 @@ class PantryViewModel(
 
             upsertStockEntryUseCase(
                 StockEntry(
-                    id = form.stockEntryId ?: 0,
+                    id = form.stockEntryId ?: idGenerator.generate(),
+                    householdId = userSession.householdId,
                     productId = productId,
                     productName = form.productName.trim(),
                     productBrand = form.productBrand.takeIf { it.isNotBlank() },
@@ -312,7 +320,9 @@ class PantryViewModel(
                     expirationDate = form.expirationDate,
                     storeName = form.storeName.takeIf { it.isNotBlank() },
                     price = price,
-                    notes = form.notes.takeIf { it.isNotBlank() }
+                    notes = form.notes.takeIf { it.isNotBlank() },
+                    updatedAtEpochMillis = timestampProvider.nowEpochMillis(),
+                    updatedBy = userSession.userId,
                 )
             )
 

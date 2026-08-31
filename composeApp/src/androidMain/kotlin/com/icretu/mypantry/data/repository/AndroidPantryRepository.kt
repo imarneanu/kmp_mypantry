@@ -35,13 +35,15 @@ class AndroidPantryRepository(
     override fun observeCategories(): Flow<List<Category>> = categoryDao.observeCategories()
         .map { categories -> categories.map { it.toDomain() } }
 
-    override suspend fun upsertProduct(product: Product): Long =
+    override suspend fun upsertProduct(product: Product): String {
         productDao.upsert(product.toEntity())
+        return product.id
+    }
 
     override suspend fun upsertStockEntry(entry: StockEntry) {
         stockEntryDao.upsert(entry.toEntity())
     }
 
-    override suspend fun deleteStockEntry(id: Long) =
+    override suspend fun deleteStockEntry(id: String) =
         stockEntryDao.deleteById(id)
 }

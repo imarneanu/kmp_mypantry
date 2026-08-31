@@ -4,31 +4,36 @@ import com.icretu.mypantry.domain.model.StockEntry
 import kotlinx.datetime.LocalDate
 
 data class StockEntryWithDetails(
-    val id: Long,
+    val id: String,
+    val householdId: String,
 
-    val productId: Long,
+    val productId: String,
     val productName: String,
     val productBrand: String?,
 
-    val categoryId: Long,
+    val categoryId: String,
     val categoryName: String,
 
     val quantity: Int,
     val unit: String,
 
-    val locationId: Long,
+    val locationId: String,
     val locationName: String,
 
     val expirationDate: LocalDate?,
     val purchaseDate: LocalDate?,
     val storeName: String?,
     val price: Double?,
-    val notes: String?
+    val notes: String?,
+
+    val updatedAtEpochMillis: Long,
+    val updatedBy: String,
 )
 
 fun StockEntryWithDetails.toDomain() =
     StockEntry(
         id = id,
+        householdId = householdId,
         productId = productId,
         productName = productName,
         productBrand = productBrand,
@@ -42,5 +47,7 @@ fun StockEntryWithDetails.toDomain() =
         purchaseDate = purchaseDate,
         storeName = storeName,
         price = price,
-        notes = notes
+        notes = notes,
+        updatedAtEpochMillis = updatedAtEpochMillis,
+        updatedBy = updatedBy,
     )

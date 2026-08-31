@@ -8,16 +8,16 @@ import com.icretu.mypantry.utils.DateUtils
 import kotlinx.datetime.LocalDate
 
 data class StockEntryUiModel(
-    val id: Long,
-    val productId: Long,
+    val id: String,
+    val productId: String,
     val productName: String,
     val productBrand: String?,
     val quantity: Int,
     val unit: String,
     val quantityText: String,
-    val locationId: Long,
+    val locationId: String,
     val locationName: String,
-    val categoryId: Long,
+    val categoryId: String,
     val categoryName: String,
     val expirationDate: LocalDate?,
     val expirationText: String,

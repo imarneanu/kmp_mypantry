@@ -6,8 +6,8 @@ import com.icretu.mypantry.domain.model.Category
 
 @Entity(tableName = "categories")
 data class CategoryEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey
+    val id: String,
     val name: String
 )
 

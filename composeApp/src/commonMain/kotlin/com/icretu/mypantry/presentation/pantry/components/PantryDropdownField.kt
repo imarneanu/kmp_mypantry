@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 fun PantryDropdownField(
     label: String,
     value: String,
-    options: List<Pair<Long, String>>,
+    options: List<Pair<String, String>>,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
-    onOptionSelected: (Long) -> Unit,
+    onOptionSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ExposedDropdownMenuBox(
