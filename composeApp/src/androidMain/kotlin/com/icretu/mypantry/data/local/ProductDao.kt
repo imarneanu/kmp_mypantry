@@ -1,7 +1,8 @@
 package com.icretu.mypantry.data.local
 
-import androidx.room.*
-import com.icretu.mypantry.domain.model.Product
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao

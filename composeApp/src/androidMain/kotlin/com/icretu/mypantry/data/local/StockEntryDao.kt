@@ -54,8 +54,8 @@ interface StockEntryDao {
     )
     fun observeStockEntries(): Flow<List<StockEntryWithDetails>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(entry: StockEntryEntity): Long
+    @Upsert
+    suspend fun upsert(entry: StockEntryEntity)
 
     @Delete
     suspend fun delete(entry: StockEntryEntity)
