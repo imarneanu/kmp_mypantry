@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.icretu.mypantry.domain.model.StockEntry
-import com.icretu.mypantry.domain.model.StockEntryRecord
 import com.icretu.mypantry.domain.sync.SyncStatus
 import kotlinx.datetime.LocalDate
 
@@ -40,7 +39,9 @@ data class StockEntryEntity(
     val isDeleted: Boolean = false,
 )
 
-fun StockEntry.toEntity() =
+fun StockEntry.toSyncedEntity() = toEntity(SyncStatus.SYNCED)
+
+fun StockEntry.toEntity(syncStatus: SyncStatus = SyncStatus.PENDING) =
     StockEntryEntity(
         id = id,
         householdId = householdId,
@@ -48,25 +49,6 @@ fun StockEntry.toEntity() =
         quantity = quantity,
         unit = unit,
         locationId = locationId,
-        expirationDate = expirationDate,
-        purchaseDate = purchaseDate,
-        storeName = storeName,
-        price = price,
-        notes = notes,
-        updatedAtEpochMillis = updatedAtEpochMillis,
-        updatedBy = updatedBy,
-        syncStatus = SyncStatus.PENDING,
-        isDeleted = false,
-    )
-
-fun StockEntryEntity.toRecord(): StockEntryRecord =
-    StockEntryRecord(
-        id = id,
-        householdId = householdId,
-        productId = productId,
-        locationId = locationId,
-        quantity = quantity,
-        unit = unit,
         expirationDate = expirationDate,
         purchaseDate = purchaseDate,
         storeName = storeName,
@@ -78,8 +60,8 @@ fun StockEntryEntity.toRecord(): StockEntryRecord =
         isDeleted = isDeleted,
     )
 
-fun StockEntryRecord.toEntity(): StockEntryEntity =
-    StockEntryEntity(
+fun StockEntryEntity.toDomain(): StockEntry =
+    StockEntry(
         id = id,
         householdId = householdId,
         productId = productId,
@@ -93,6 +75,5 @@ fun StockEntryRecord.toEntity(): StockEntryEntity =
         notes = notes,
         updatedAtEpochMillis = updatedAtEpochMillis,
         updatedBy = updatedBy,
-        syncStatus = syncStatus,
         isDeleted = isDeleted,
     )

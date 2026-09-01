@@ -1,13 +1,9 @@
 package com.icretu.mypantry.data.remote
 
-import com.icretu.mypantry.data.remote.model.RemoteStockEntry
-import com.icretu.mypantry.data.remote.model.toRecord
-import com.icretu.mypantry.domain.model.StockEntryRecord
-import com.icretu.mypantry.domain.model.toRemote
+import com.icretu.mypantry.domain.model.StockEntry
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class StockEntryRemoteDataSource {
     private fun collection(householdId: String) =
@@ -18,20 +14,39 @@ class StockEntryRemoteDataSource {
 
     fun observeAll(
         householdId: String
-    ): Flow<List<StockEntryRecord>> =
-        collection(householdId)
-            .snapshots
-            .map { snapshot ->
-                snapshot.documents.map { document ->
-                    document.data<RemoteStockEntry>()
-                        .toRecord()
-                }
-            }
+    ): Flow<List<StockEntry>> {
+        TODO("Step 5")
+    }
+//        collection(householdId)
+//            .snapshots
+//            .map { snapshot ->
+//                snapshot.documents.map { document ->
+//                    document.data<RemoteStockEntry>()
+//                        .toRecord()
+//                }
+//            }
 
-    suspend fun upsert(record: StockEntryRecord) {
-        collection(record.householdId)
-            .document(record.id)
-            .set(record.toRemote())
+    suspend fun upsert(entry: StockEntry) {
+        collection(entry.householdId)
+            .document(entry.id)
+            .set(
+                mapOf(
+                    "id" to entry.id,
+                    "householdId" to entry.householdId,
+                    "productId" to entry.productId,
+                    "locationId" to entry.locationId,
+                    "quantity" to entry.quantity,
+                    "unit" to entry.unit,
+                    "expirationDate" to entry.expirationDate?.toString(),
+                    "purchaseDate" to entry.purchaseDate?.toString(),
+                    "storeName" to entry.storeName,
+                    "price" to entry.price,
+                    "notes" to entry.notes,
+                    "updatedAtEpochMillis" to entry.updatedAtEpochMillis,
+                    "updatedBy" to entry.updatedBy,
+                    "isDeleted" to entry.isDeleted,
+                )
+            )
     }
 
     suspend fun delete(

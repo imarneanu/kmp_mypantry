@@ -1,9 +1,9 @@
 package com.icretu.mypantry.domain.sync
 
 import com.icretu.mypantry.data.local.StockEntryDao
-import com.icretu.mypantry.data.local.toEntity
-import com.icretu.mypantry.data.local.toRecord
-import com.icretu.mypantry.domain.model.StockEntryRecord
+import com.icretu.mypantry.data.local.toDomain
+import com.icretu.mypantry.data.local.toSyncedEntity
+import com.icretu.mypantry.domain.model.StockEntry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -13,16 +13,16 @@ class AndroidStockEntryLocalSyncDataSource(
 
     override fun observePending(
         householdId: String
-    ): Flow<List<StockEntryRecord>> =
+    ): Flow<List<StockEntry>> =
         dao.observePending(householdId)
             .map { entities ->
-                entities.map { it.toRecord() }
+                entities.map { it.toDomain() }
             }
 
     override suspend fun getById(
         id: String
-    ): StockEntryRecord? =
-        dao.getById(id)?.toRecord()
+    ): StockEntry? =
+        dao.getById(id)?.toDomain()
 
     override suspend fun markSyncing(id: String) {
         dao.updateSyncStatus(id, SyncStatus.SYNCING)
@@ -37,15 +37,13 @@ class AndroidStockEntryLocalSyncDataSource(
     }
 
     override suspend fun applyRemote(
-        record: StockEntryRecord
+        entry: StockEntry
     ) {
-        val local = dao.getById(record.id)
+        val local = dao.getById(entry.id)
         when {
             local == null -> {
                 dao.upsertFromRemote(
-                    record.copy(
-                        syncStatus = SyncStatus.SYNCED
-                    ).toEntity()
+                    entry.toSyncedEntity()
                 )
             }
 
@@ -54,11 +52,9 @@ class AndroidStockEntryLocalSyncDataSource(
                 // Don't overwrite it.
             }
 
-            record.updatedAtEpochMillis > local.updatedAtEpochMillis -> {
+            entry.updatedAtEpochMillis > local.updatedAtEpochMillis -> {
                 dao.upsertFromRemote(
-                    record.copy(
-                        syncStatus = SyncStatus.SYNCED
-                    ).toEntity()
+                    entry.toSyncedEntity()
                 )
             }
         }

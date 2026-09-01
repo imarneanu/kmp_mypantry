@@ -1,7 +1,7 @@
 package com.icretu.mypantry.domain.sync
 
 import com.icretu.mypantry.data.remote.StockEntryRemoteDataSource
-import com.icretu.mypantry.domain.model.StockEntryRecord
+import com.icretu.mypantry.domain.model.StockEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -46,15 +46,15 @@ class StockEntrySyncEngine(
         downloadJob = null
     }
 
-    private suspend fun upload(record: StockEntryRecord) {
-        local.markSyncing(record.id)
+    private suspend fun upload(entry: StockEntry) {
+        local.markSyncing(entry.id)
 
         runCatching {
-            remote.upsert(record)
+            remote.upsert(entry)
         }.onSuccess {
-            local.markSynced(record.id)
+            local.markSynced(entry.id)
         }.onFailure {
-            local.markFailed(record.id)
+            local.markFailed(entry.id)
         }
     }
 }
