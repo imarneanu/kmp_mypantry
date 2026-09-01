@@ -74,6 +74,11 @@ class FirebaseHouseholdRepository(
             invite.get<String?>("householdId")
                 ?: error("Invalid household invite")
 
+        val usedBy = invite.get<String?>("usedBy")
+        if (usedBy != null) {
+            error("Invite code has already been used")
+        }
+
         val now = timestampProvider.nowEpochMillis()
 
         firestore
@@ -99,6 +104,15 @@ class FirebaseHouseholdRepository(
                 merge = true
             )
 
+        firestore
+            .collection("householdInvites")
+            .document(inviteCode)
+            .update(
+                mapOf(
+                    "usedBy" to userId
+                )
+            )
+
         return householdId
     }
 
@@ -112,4 +126,31 @@ class FirebaseHouseholdRepository(
             .map { document ->
                 document.get<String?>("activeHouseholdId")
             }
+
+    override suspend fun createInvite(
+        householdId: String,
+        userId: String
+    ): String {
+        val inviteCode = idGenerator
+            .generate()
+            .replace("-", "")
+            .take(8)
+            .uppercase()
+
+        val now = timestampProvider.nowEpochMillis()
+
+        firestore
+            .collection("householdInvites")
+            .document(inviteCode)
+            .set(
+                mapOf(
+                    "householdId" to householdId,
+                    "createdBy" to userId,
+                    "createdAtEpochMillis" to now,
+                    "usedBy" to null
+                )
+            )
+
+        return inviteCode
+    }
 }

@@ -16,4 +16,9 @@ interface HouseholdRepository {
     fun observeHouseholdIdForUser(
         userId: String
     ): Flow<String?>
+
+    suspend fun createInvite(
+        householdId: String,
+        userId: String
+    ): String
 }

@@ -17,11 +17,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.icretu.mypantry.presentation.household.invite.HouseholdInviteRoute
 import com.icretu.mypantry.presentation.locations.LocationsRoute
 import com.icretu.mypantry.presentation.pantry.PantryRoute
 import com.icretu.mypantry.presentation.pantry.PantryViewModel
 import com.icretu.mypantry.presentation.pantry.StockEntryFormRoute
 import com.icretu.mypantry.presentation.placeholder.PlaceholderScreen
+import com.icretu.mypantry.presentation.settings.SettingsScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +34,10 @@ fun AppNavigation() {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
-    val showAppBars = currentRoute != AppRoute.StockEntryForm.route
+    val showAppBars = currentRoute !in setOf(
+        AppRoute.StockEntryForm.route,
+        AppRoute.HouseholdInvite.route
+    )
 
     Scaffold(
         topBar = {
@@ -85,6 +90,14 @@ fun AppNavigation() {
                 route = AppRoute.PantryGraph.route,
                 startDestination = AppRoute.Pantry.route
             ) {
+
+                composable(AppRoute.HouseholdInvite.route) {
+                    HouseholdInviteRoute(
+                        onBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
 
                 composable(AppRoute.Pantry.route) { backStackEntry ->
                     val parentEntry = remember(backStackEntry) {
@@ -156,7 +169,13 @@ fun AppNavigation() {
             }
 
             composable(AppRoute.Settings.route) {
-                PlaceholderScreen("Settings")
+                SettingsScreen(
+                    onInviteFamilyMember = {
+                        navController.navigate(
+                            AppRoute.HouseholdInvite.route
+                        )
+                    }
+                )
             }
         }
     }

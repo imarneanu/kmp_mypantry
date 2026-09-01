@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.household
+package com.icretu.mypantry.presentation.household.invite
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -6,12 +6,15 @@ import androidx.compose.runtime.getValue
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HouseholdSetupRoute() {
-    val viewModel: HouseholdSetupViewModel = koinViewModel()
+fun HouseholdInviteRoute(
+    onBack: () -> Unit
+) {
+    val viewModel: HouseholdInviteViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
-    HouseholdSetupScreen(
+    HouseholdInviteScreen(
         state = state,
-        onIntent = viewModel::onIntent
+        onCreateInvite = viewModel::createInvite,
+        onBack = onBack
     )
 }

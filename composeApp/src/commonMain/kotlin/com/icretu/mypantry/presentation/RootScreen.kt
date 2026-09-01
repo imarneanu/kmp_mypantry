@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import com.icretu.mypantry.domain.repository.SessionRepository
 import com.icretu.mypantry.navigation.AppNavigation
 import com.icretu.mypantry.presentation.auth.AuthRoute
-import com.icretu.mypantry.presentation.household.HouseholdSetupRoute
+import com.icretu.mypantry.presentation.household.setup.HouseholdSetupRoute
 import org.koin.compose.koinInject
 
 @Composable
