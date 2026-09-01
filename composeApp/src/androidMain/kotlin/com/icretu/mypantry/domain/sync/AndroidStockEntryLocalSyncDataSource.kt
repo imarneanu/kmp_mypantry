@@ -1,5 +1,7 @@
 package com.icretu.mypantry.domain.sync
 
+import com.icretu.mypantry.core.sync.StockEntryLocalSyncDataSource
+import com.icretu.mypantry.core.sync.SyncStatus
 import com.icretu.mypantry.feature.pantry.data.local.StockEntryDao
 import com.icretu.mypantry.feature.pantry.data.local.toDomain
 import com.icretu.mypantry.feature.pantry.data.local.toSyncedEntity

@@ -1,4 +1,4 @@
-package com.icretu.mypantry.domain.sync
+package com.icretu.mypantry.core.sync
 
 import com.icretu.mypantry.feature.pantry.data.StockEntryRemoteDataSource
 import com.icretu.mypantry.feature.pantry.domain.model.StockEntry

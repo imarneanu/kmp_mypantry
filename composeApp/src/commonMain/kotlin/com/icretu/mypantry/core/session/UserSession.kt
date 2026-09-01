@@ -1,4 +1,4 @@
-package com.icretu.mypantry.domain.model
+package com.icretu.mypantry.core.session
 
 data class UserSession(
     val userId: String,

@@ -1,6 +1,5 @@
-package com.icretu.mypantry.domain.repository
+package com.icretu.mypantry.core.session
 
-import com.icretu.mypantry.domain.model.UserSession
 import kotlinx.coroutines.flow.Flow
 
 interface SessionRepository {

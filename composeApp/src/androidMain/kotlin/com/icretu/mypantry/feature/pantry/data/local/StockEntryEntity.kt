@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.icretu.mypantry.feature.pantry.domain.model.StockEntry
-import com.icretu.mypantry.domain.sync.SyncStatus
+import com.icretu.mypantry.core.sync.SyncStatus
 import kotlinx.datetime.LocalDate
 
 @Entity(

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.icretu.mypantry.feature.pantry.domain.model.Product
 import com.icretu.mypantry.feature.pantry.domain.model.StockEntry
 import com.icretu.mypantry.feature.pantry.domain.model.toUiModel
-import com.icretu.mypantry.domain.repository.SessionRepository
+import com.icretu.mypantry.core.session.SessionRepository
 import com.icretu.mypantry.feature.pantry.domain.usecase.DeleteStockEntryUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveLocationsUseCase
@@ -13,11 +13,11 @@ import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveProductsUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveStockEntriesUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.UpsertProductUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.UpsertStockEntryUseCase
-import com.icretu.mypantry.domain.util.IdGenerator
-import com.icretu.mypantry.domain.util.TimestampProvider
+import com.icretu.mypantry.core.utils.IdGenerator
+import com.icretu.mypantry.core.time.TimestampProvider
 import com.icretu.mypantry.feature.pantry.presentation.stockEntry.StockEntryFormState
 import com.icretu.mypantry.feature.pantry.presentation.stockEntry.StockEntryUiModel
-import com.icretu.mypantry.utils.updateState
+import com.icretu.mypantry.core.ui.updateState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

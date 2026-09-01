@@ -1,4 +1,4 @@
-package com.icretu.mypantry.navigation
+package com.icretu.mypantry.core.navigation
 
 sealed class AppRoute(val route: String) {
     data object PantryGraph : AppRoute("pantry_graph")

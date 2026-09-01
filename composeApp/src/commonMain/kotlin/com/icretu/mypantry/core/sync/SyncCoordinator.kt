@@ -1,6 +1,6 @@
-package com.icretu.mypantry.domain.sync
+package com.icretu.mypantry.core.sync
 
-import com.icretu.mypantry.domain.repository.SessionRepository
+import com.icretu.mypantry.core.session.SessionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest

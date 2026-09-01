@@ -1,4 +1,4 @@
-package com.icretu.mypantry.navigation
+package com.icretu.mypantry.core.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api

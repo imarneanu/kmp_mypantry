@@ -1,4 +1,4 @@
-package com.icretu.mypantry.navigation
+package com.icretu.mypantry.core.navigation
 
 data class BottomNavItem(
     val route: AppRoute,

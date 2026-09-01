@@ -23,7 +23,7 @@ import com.icretu.mypantry.feature.pantry.presentation.PantryState
 import com.icretu.mypantry.feature.pantry.presentation.components.ExpirationDatePickerDialog
 import com.icretu.mypantry.feature.pantry.presentation.components.PantryDropdownField
 import com.icretu.mypantry.feature.pantry.presentation.components.ProductSelectorField
-import com.icretu.mypantry.utils.DateUtils.formatDate
+import com.icretu.mypantry.core.time.DateUtils.formatDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

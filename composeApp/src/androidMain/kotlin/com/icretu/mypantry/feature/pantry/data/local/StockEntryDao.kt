@@ -2,7 +2,7 @@ package com.icretu.mypantry.feature.pantry.data.local
 
 import androidx.room.*
 import com.icretu.mypantry.feature.pantry.domain.model.StockEntryDetails
-import com.icretu.mypantry.domain.sync.SyncStatus
+import com.icretu.mypantry.core.sync.SyncStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao

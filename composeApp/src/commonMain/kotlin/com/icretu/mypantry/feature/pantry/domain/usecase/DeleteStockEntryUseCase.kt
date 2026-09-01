@@ -1,7 +1,7 @@
 package com.icretu.mypantry.feature.pantry.domain.usecase
 
-import com.icretu.mypantry.domain.repository.SessionRepository
-import com.icretu.mypantry.domain.util.TimestampProvider
+import com.icretu.mypantry.core.session.SessionRepository
+import com.icretu.mypantry.core.time.TimestampProvider
 import com.icretu.mypantry.feature.pantry.domain.repository.PantryRepository
 import kotlinx.coroutines.flow.firstOrNull
 

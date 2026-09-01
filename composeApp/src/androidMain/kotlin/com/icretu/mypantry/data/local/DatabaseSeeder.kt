@@ -1,6 +1,6 @@
 package com.icretu.mypantry.data.local
 
-import com.icretu.mypantry.domain.util.IdGenerator
+import com.icretu.mypantry.core.utils.IdGenerator
 import com.icretu.mypantry.feature.pantry.data.local.CategoryDao
 import com.icretu.mypantry.feature.pantry.data.local.CategoryEntity
 import com.icretu.mypantry.feature.pantry.data.local.StorageLocationDao

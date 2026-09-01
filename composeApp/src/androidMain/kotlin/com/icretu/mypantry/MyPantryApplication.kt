@@ -3,9 +3,9 @@ package com.icretu.mypantry
 import android.app.Application
 import com.icretu.mypantry.data.local.DatabaseSeeder
 import com.icretu.mypantry.di.androidModule
-import com.icretu.mypantry.di.commonModule
-import com.icretu.mypantry.di.databaseModule
-import com.icretu.mypantry.domain.sync.SyncCoordinator
+import com.icretu.mypantry.core.di.commonModule
+import com.icretu.mypantry.core.sync.di.syncModule
+import com.icretu.mypantry.core.sync.SyncCoordinator
 import com.icretu.mypantry.feature.auth.di.authModule
 import com.icretu.mypantry.feature.household.di.householdModule
 import com.icretu.mypantry.feature.locations.di.locationsModule
@@ -38,8 +38,8 @@ class MyPantryApplication : Application() {
                 pantryModule,
                 locationsModule,
                 settingsModule,
+                syncModule,
                 androidModule,
-                databaseModule,
             )
         }
 

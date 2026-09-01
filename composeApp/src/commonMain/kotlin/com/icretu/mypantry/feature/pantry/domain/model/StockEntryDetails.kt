@@ -1,7 +1,7 @@
 package com.icretu.mypantry.feature.pantry.domain.model
 
 import com.icretu.mypantry.feature.pantry.presentation.stockEntry.StockEntryUiModel
-import com.icretu.mypantry.utils.DateUtils
+import com.icretu.mypantry.core.time.DateUtils
 import kotlinx.datetime.LocalDate
 
 data class StockEntryDetails(

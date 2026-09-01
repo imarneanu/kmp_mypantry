@@ -1,7 +1,7 @@
 package com.icretu.mypantry.feature.household.domain.usecase
 
 import com.icretu.mypantry.feature.household.domain.repository.HouseholdRepository
-import com.icretu.mypantry.domain.repository.SessionRepository
+import com.icretu.mypantry.core.session.SessionRepository
 import kotlinx.coroutines.flow.firstOrNull
 
 class CreateHouseholdUseCase(

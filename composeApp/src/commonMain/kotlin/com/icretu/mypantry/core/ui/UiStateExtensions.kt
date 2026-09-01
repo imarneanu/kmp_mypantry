@@ -1,4 +1,4 @@
-package com.icretu.mypantry.utils
+package com.icretu.mypantry.core.ui
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

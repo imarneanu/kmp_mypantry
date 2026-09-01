@@ -1,4 +1,4 @@
-package com.icretu.mypantry.domain.sync
+package com.icretu.mypantry.core.sync
 
 enum class SyncStatus {
     SYNCED,

@@ -1,4 +1,4 @@
-package com.icretu.mypantry.domain.util
+package com.icretu.mypantry.core.time
 
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime

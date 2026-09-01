@@ -1,4 +1,4 @@
-package com.icretu.mypantry.utils
+package com.icretu.mypantry.core.time
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
