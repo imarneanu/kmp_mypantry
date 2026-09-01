@@ -1,9 +1,12 @@
 package com.icretu.mypantry.di
 
 import com.icretu.mypantry.data.remote.FirebaseAuthRepository
-import com.icretu.mypantry.domain.model.UserSession
+import com.icretu.mypantry.data.remote.FirebaseHouseholdRepository
 import com.icretu.mypantry.domain.repository.AuthRepository
+import com.icretu.mypantry.domain.repository.HouseholdRepository
+import com.icretu.mypantry.domain.usecase.CreateHouseholdUseCase
 import com.icretu.mypantry.domain.usecase.DeleteStockEntryUseCase
+import com.icretu.mypantry.domain.usecase.JoinHouseholdUseCase
 import com.icretu.mypantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.domain.usecase.ObserveLocationsUseCase
 import com.icretu.mypantry.domain.usecase.ObserveProductsUseCase
@@ -17,6 +20,7 @@ import com.icretu.mypantry.domain.util.DefaultTimestampProvider
 import com.icretu.mypantry.domain.util.IdGenerator
 import com.icretu.mypantry.domain.util.TimestampProvider
 import com.icretu.mypantry.presentation.auth.AuthViewModel
+import com.icretu.mypantry.presentation.household.HouseholdSetupViewModel
 import com.icretu.mypantry.presentation.locations.LocationsViewModel
 import com.icretu.mypantry.presentation.pantry.PantryViewModel
 import org.koin.core.module.dsl.factoryOf
@@ -29,6 +33,7 @@ val commonModule = module {
     viewModelOf(::PantryViewModel)
     viewModelOf(::LocationsViewModel)
     viewModelOf(::AuthViewModel)
+    viewModelOf(::HouseholdSetupViewModel)
 
     factoryOf(::ObserveStockEntriesUseCase)
     factoryOf(::UpsertStockEntryUseCase)
@@ -37,6 +42,8 @@ val commonModule = module {
     factoryOf(::UpsertProductUseCase)
     factoryOf(::ObserveLocationsUseCase)
     factoryOf(::ObserveCategoriesUseCase)
+    factoryOf(::CreateHouseholdUseCase)
+    factoryOf(::JoinHouseholdUseCase)
 
     factoryOf(::SignUpUseCase)
     factoryOf(::SignInUseCase)
@@ -46,4 +53,5 @@ val commonModule = module {
     singleOf(::DefaultTimestampProvider).bind<TimestampProvider>()
 
     singleOf(::FirebaseAuthRepository).bind<AuthRepository>()
+    singleOf(::FirebaseHouseholdRepository).bind<HouseholdRepository>()
 }

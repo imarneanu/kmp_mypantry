@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import com.icretu.mypantry.domain.repository.SessionRepository
 import com.icretu.mypantry.navigation.AppNavigation
 import com.icretu.mypantry.presentation.auth.AuthRoute
+import com.icretu.mypantry.presentation.household.HouseholdSetupRoute
 import org.koin.compose.koinInject
 
 @Composable
@@ -15,9 +16,14 @@ fun RootScreen(
     val session by sessionRepository.session
         .collectAsState(initial = null)
 
-    if (session == null) {
-        AuthRoute()
-    } else {
-        AppNavigation()
+    when {
+        session == null ->
+            AuthRoute()
+
+        session?.householdId == null ->
+            HouseholdSetupRoute()
+
+        else ->
+            AppNavigation()
     }
 }
