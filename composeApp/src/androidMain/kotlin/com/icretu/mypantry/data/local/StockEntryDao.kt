@@ -69,14 +69,14 @@ interface StockEntryDao {
     UPDATE stock_entries
     SET isDeleted = 1,
         syncStatus = 'PENDING',
-        updatedAtEpochMillis = :updatedAt,
+        updatedAtEpochMillis = :updatedAtEpochMillis,
         updatedBy = :updatedBy
     WHERE id = :id
     """
     )
     suspend fun markDeleted(
         id: String,
-        updatedAt: Long,
+        updatedAtEpochMillis: Long,
         updatedBy: String
     )
 

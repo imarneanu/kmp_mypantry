@@ -44,6 +44,15 @@ class AndroidPantryRepository(
         stockEntryDao.upsert(entry.toEntity())
     }
 
-    override suspend fun deleteStockEntry(id: String) =
-        stockEntryDao.deleteById(id)
+    override suspend fun deleteStockEntry(
+        id: String,
+        updatedAtEpochMillis: Long,
+        updatedBy: String
+    ) {
+        stockEntryDao.markDeleted(
+            id = id,
+            updatedAtEpochMillis = updatedAtEpochMillis,
+            updatedBy = updatedBy
+        )
+    }
 }

@@ -14,6 +14,7 @@ interface PantryRepository {
     fun observeCategories(): Flow<List<Category>>
 
     suspend fun upsertProduct(product: Product): String
+
     suspend fun upsertStockEntry(entry: StockEntry)
-    suspend fun deleteStockEntry(id: String)
+    suspend fun deleteStockEntry(id: String, updatedAtEpochMillis: Long, updatedBy: String)
 }
