@@ -1,11 +1,6 @@
 package com.icretu.mypantry.di
 
-import com.icretu.mypantry.data.remote.FirebaseHouseholdRepository
-import com.icretu.mypantry.domain.repository.HouseholdRepository
-import com.icretu.mypantry.domain.usecase.CreateHouseholdInviteUseCase
-import com.icretu.mypantry.domain.usecase.CreateHouseholdUseCase
 import com.icretu.mypantry.domain.usecase.DeleteStockEntryUseCase
-import com.icretu.mypantry.domain.usecase.JoinHouseholdUseCase
 import com.icretu.mypantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.domain.usecase.ObserveLocationsUseCase
 import com.icretu.mypantry.domain.usecase.ObserveProductsUseCase
@@ -15,8 +10,6 @@ import com.icretu.mypantry.domain.usecase.UpsertStockEntryUseCase
 import com.icretu.mypantry.domain.util.DefaultTimestampProvider
 import com.icretu.mypantry.domain.util.IdGenerator
 import com.icretu.mypantry.domain.util.TimestampProvider
-import com.icretu.mypantry.presentation.household.invite.HouseholdInviteViewModel
-import com.icretu.mypantry.presentation.household.setup.HouseholdSetupViewModel
 import com.icretu.mypantry.presentation.locations.LocationsViewModel
 import com.icretu.mypantry.presentation.pantry.PantryViewModel
 import com.icretu.mypantry.presentation.settings.SettingsViewModel
@@ -29,8 +22,6 @@ import org.koin.dsl.module
 val commonModule = module {
     viewModelOf(::PantryViewModel)
     viewModelOf(::LocationsViewModel)
-    viewModelOf(::HouseholdSetupViewModel)
-    viewModelOf(::HouseholdInviteViewModel)
     viewModelOf(::SettingsViewModel)
 
     factoryOf(::ObserveStockEntriesUseCase)
@@ -40,12 +31,8 @@ val commonModule = module {
     factoryOf(::UpsertProductUseCase)
     factoryOf(::ObserveLocationsUseCase)
     factoryOf(::ObserveCategoriesUseCase)
-    factoryOf(::CreateHouseholdUseCase)
-    factoryOf(::JoinHouseholdUseCase)
-    factoryOf(::CreateHouseholdInviteUseCase)
 
     single { IdGenerator() }
     singleOf(::DefaultTimestampProvider).bind<TimestampProvider>()
 
-    singleOf(::FirebaseHouseholdRepository).bind<HouseholdRepository>()
 }

@@ -1,9 +1,4 @@
-package com.icretu.mypantry.domain.model
-
-enum class HouseholdRole {
-    OWNER,
-    MEMBER
-}
+package com.icretu.mypantry.feature.household.domain.model
 
 data class HouseholdMember(
     val userId: String,

@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.household.setup
+package com.icretu.mypantry.feature.household.presentation.setup
 
 data class HouseholdSetupState(
     val householdName: String = "",

@@ -1,7 +1,7 @@
-package com.icretu.mypantry.data.remote
+package com.icretu.mypantry.feature.household.data
 
-import com.icretu.mypantry.domain.model.HouseholdRole
-import com.icretu.mypantry.domain.repository.HouseholdRepository
+import com.icretu.mypantry.feature.household.domain.model.HouseholdRole
+import com.icretu.mypantry.feature.household.domain.repository.HouseholdRepository
 import com.icretu.mypantry.domain.util.IdGenerator
 import com.icretu.mypantry.domain.util.TimestampProvider
 import dev.gitlive.firebase.Firebase

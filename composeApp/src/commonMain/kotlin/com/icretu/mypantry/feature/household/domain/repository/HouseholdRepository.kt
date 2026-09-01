@@ -1,4 +1,4 @@
-package com.icretu.mypantry.domain.repository
+package com.icretu.mypantry.feature.household.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 

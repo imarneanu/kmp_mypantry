@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.household.setup
+package com.icretu.mypantry.feature.household.presentation.setup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

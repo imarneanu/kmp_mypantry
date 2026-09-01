@@ -2,7 +2,6 @@ package com.icretu.mypantry.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -17,14 +16,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.icretu.mypantry.presentation.household.invite.HouseholdInviteRoute
+import com.icretu.mypantry.feature.household.presentation.invite.HouseholdInviteRoute
 import com.icretu.mypantry.presentation.locations.LocationsRoute
 import com.icretu.mypantry.presentation.pantry.PantryRoute
 import com.icretu.mypantry.presentation.pantry.PantryViewModel
 import com.icretu.mypantry.presentation.pantry.StockEntryFormRoute
 import com.icretu.mypantry.presentation.placeholder.PlaceholderScreen
 import com.icretu.mypantry.presentation.settings.SettingsRoute
-import com.icretu.mypantry.presentation.settings.SettingsScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

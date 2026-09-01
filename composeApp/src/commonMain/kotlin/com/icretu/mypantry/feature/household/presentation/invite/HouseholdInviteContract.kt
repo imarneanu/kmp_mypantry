@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.household.invite
+package com.icretu.mypantry.feature.household.presentation.invite
 
 data class HouseholdInviteState(
     val inviteCode: String? = null,

@@ -1,8 +1,8 @@
-package com.icretu.mypantry.presentation.household.invite
+package com.icretu.mypantry.feature.household.presentation.invite
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icretu.mypantry.domain.usecase.CreateHouseholdInviteUseCase
+import com.icretu.mypantry.feature.household.domain.usecase.CreateHouseholdInviteUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

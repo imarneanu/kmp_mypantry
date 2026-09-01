@@ -1,4 +1,4 @@
-package com.icretu.mypantry.domain.model
+package com.icretu.mypantry.feature.household.domain.model
 
 data class Household(
     val id: String,

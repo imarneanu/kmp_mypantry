@@ -2,7 +2,7 @@ package com.icretu.mypantry.data.repository
 
 import com.icretu.mypantry.domain.model.UserSession
 import com.icretu.mypantry.feature.auth.domain.repository.AuthRepository
-import com.icretu.mypantry.domain.repository.HouseholdRepository
+import com.icretu.mypantry.feature.household.domain.repository.HouseholdRepository
 import com.icretu.mypantry.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
