@@ -1,7 +1,7 @@
 package com.icretu.mypantry.data.local.converters
 
 import androidx.room.TypeConverter
-import com.icretu.mypantry.domain.sync.SyncStatus
+import com.icretu.mypantry.core.sync.SyncStatus
 
 class SyncStatusConverter {
     @TypeConverter

@@ -1,9 +1,11 @@
 package com.icretu.mypantry.domain.sync
 
-import com.icretu.mypantry.data.local.StockEntryDao
-import com.icretu.mypantry.data.local.toDomain
-import com.icretu.mypantry.data.local.toSyncedEntity
-import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.core.sync.StockEntryLocalSyncDataSource
+import com.icretu.mypantry.core.sync.SyncStatus
+import com.icretu.mypantry.feature.pantry.data.local.StockEntryDao
+import com.icretu.mypantry.feature.pantry.data.local.toDomain
+import com.icretu.mypantry.feature.pantry.data.local.toSyncedEntity
+import com.icretu.mypantry.feature.pantry.domain.model.StockEntry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

@@ -3,12 +3,12 @@ package com.icretu.mypantry.di
 import androidx.room.Room
 import com.icretu.mypantry.data.local.DatabaseSeeder
 import com.icretu.mypantry.data.local.PantryDatabase
-import com.icretu.mypantry.data.repository.AndroidPantryRepository
-import com.icretu.mypantry.data.repository.SessionRepositoryImpl
-import com.icretu.mypantry.domain.repository.PantryRepository
-import com.icretu.mypantry.domain.repository.SessionRepository
+import com.icretu.mypantry.feature.pantry.data.repository.AndroidPantryRepository
+import com.icretu.mypantry.core.session.SessionRepositoryImpl
+import com.icretu.mypantry.feature.pantry.domain.repository.PantryRepository
+import com.icretu.mypantry.core.session.SessionRepository
 import com.icretu.mypantry.domain.sync.AndroidStockEntryLocalSyncDataSource
-import com.icretu.mypantry.domain.sync.StockEntryLocalSyncDataSource
+import com.icretu.mypantry.core.sync.StockEntryLocalSyncDataSource
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind

@@ -5,6 +5,14 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.icretu.mypantry.data.local.converters.LocalDateConverter
 import com.icretu.mypantry.data.local.converters.SyncStatusConverter
+import com.icretu.mypantry.feature.pantry.data.local.CategoryDao
+import com.icretu.mypantry.feature.pantry.data.local.CategoryEntity
+import com.icretu.mypantry.feature.pantry.data.local.ProductDao
+import com.icretu.mypantry.feature.pantry.data.local.ProductEntity
+import com.icretu.mypantry.feature.pantry.data.local.StockEntryDao
+import com.icretu.mypantry.feature.pantry.data.local.StockEntryEntity
+import com.icretu.mypantry.feature.pantry.data.local.StorageLocationDao
+import com.icretu.mypantry.feature.pantry.data.local.StorageLocationEntity
 
 @Database(
     entities = [
