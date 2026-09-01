@@ -23,6 +23,7 @@ import com.icretu.mypantry.presentation.pantry.PantryRoute
 import com.icretu.mypantry.presentation.pantry.PantryViewModel
 import com.icretu.mypantry.presentation.pantry.StockEntryFormRoute
 import com.icretu.mypantry.presentation.placeholder.PlaceholderScreen
+import com.icretu.mypantry.presentation.settings.SettingsRoute
 import com.icretu.mypantry.presentation.settings.SettingsScreen
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -169,7 +170,7 @@ fun AppNavigation() {
             }
 
             composable(AppRoute.Settings.route) {
-                SettingsScreen(
+                SettingsRoute(
                     onInviteFamilyMember = {
                         navController.navigate(
                             AppRoute.HouseholdInvite.route

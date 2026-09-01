@@ -25,6 +25,7 @@ import com.icretu.mypantry.presentation.household.setup.HouseholdSetupViewModel
 import com.icretu.mypantry.presentation.household.invite.HouseholdInviteViewModel
 import com.icretu.mypantry.presentation.locations.LocationsViewModel
 import com.icretu.mypantry.presentation.pantry.PantryViewModel
+import com.icretu.mypantry.presentation.settings.SettingsViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -37,6 +38,7 @@ val commonModule = module {
     viewModelOf(::AuthViewModel)
     viewModelOf(::HouseholdSetupViewModel)
     viewModelOf(::HouseholdInviteViewModel)
+    viewModelOf(::SettingsViewModel)
 
     factoryOf(::ObserveStockEntriesUseCase)
     factoryOf(::UpsertStockEntryUseCase)

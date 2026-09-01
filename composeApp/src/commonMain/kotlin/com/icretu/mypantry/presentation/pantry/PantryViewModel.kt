@@ -300,10 +300,13 @@ class PantryViewModel(
             val session = sessionRepository.session.firstOrNull()
                 ?: error("No authenticated user")
 
+            val householdId = session.householdId
+                ?: error("No active household")
+
             upsertStockEntryUseCase(
                 StockEntry(
                     id = form.stockEntryId ?: idGenerator.generate(),
-                    householdId = session.householdId.orEmpty(),
+                    householdId = householdId,
                     productId = productId,
                     quantity = quantity,
                     unit = form.unit.trim(),

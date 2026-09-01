@@ -22,19 +22,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        startKoin {
-            androidContext(this@MainActivity)
-            modules(
-                commonModule,
-                androidModule,
-                databaseModule,
-            )
-        }
-
-        lifecycleScope.launch {
-            getKoin().get<DatabaseSeeder>().seedIfNeeded()
-        }
-
         setContent {
             App()
         }
