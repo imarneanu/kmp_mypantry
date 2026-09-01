@@ -1,7 +1,7 @@
 package com.icretu.mypantry.domain.sync
 
-import com.icretu.mypantry.data.remote.StockEntryRemoteDataSource
-import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.feature.pantry.data.StockEntryRemoteDataSource
+import com.icretu.mypantry.feature.pantry.domain.model.StockEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

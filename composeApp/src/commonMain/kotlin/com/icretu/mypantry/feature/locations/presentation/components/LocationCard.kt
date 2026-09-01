@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.icretu.mypantry.domain.model.StorageLocation
+import com.icretu.mypantry.feature.pantry.domain.model.StorageLocation
 
 @Composable
 fun LocationCard(

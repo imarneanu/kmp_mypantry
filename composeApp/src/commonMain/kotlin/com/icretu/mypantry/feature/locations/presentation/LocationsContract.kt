@@ -1,6 +1,6 @@
 package com.icretu.mypantry.feature.locations.presentation
 
-import com.icretu.mypantry.domain.model.StorageLocation
+import com.icretu.mypantry.feature.pantry.domain.model.StorageLocation
 
 data class LocationsState(
     val locations: List<StorageLocation> = emptyList(),

@@ -1,6 +1,6 @@
 package com.icretu.mypantry.domain.sync
 
-import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.feature.pantry.domain.model.StockEntry
 import kotlinx.coroutines.flow.Flow
 
 interface StockEntryLocalSyncDataSource {

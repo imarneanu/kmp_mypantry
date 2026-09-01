@@ -1,6 +1,10 @@
 package com.icretu.mypantry.data.local
 
 import com.icretu.mypantry.domain.util.IdGenerator
+import com.icretu.mypantry.feature.pantry.data.local.CategoryDao
+import com.icretu.mypantry.feature.pantry.data.local.CategoryEntity
+import com.icretu.mypantry.feature.pantry.data.local.StorageLocationDao
+import com.icretu.mypantry.feature.pantry.data.local.StorageLocationEntity
 
 class DatabaseSeeder(
     private val storageLocationDao: StorageLocationDao,

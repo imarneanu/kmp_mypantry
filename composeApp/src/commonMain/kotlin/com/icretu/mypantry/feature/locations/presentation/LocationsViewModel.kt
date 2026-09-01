@@ -2,7 +2,7 @@ package com.icretu.mypantry.feature.locations.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icretu.mypantry.domain.usecase.ObserveLocationsUseCase
+import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveLocationsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

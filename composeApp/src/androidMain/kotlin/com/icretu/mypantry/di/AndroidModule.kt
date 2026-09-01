@@ -3,9 +3,9 @@ package com.icretu.mypantry.di
 import androidx.room.Room
 import com.icretu.mypantry.data.local.DatabaseSeeder
 import com.icretu.mypantry.data.local.PantryDatabase
-import com.icretu.mypantry.data.repository.AndroidPantryRepository
+import com.icretu.mypantry.feature.pantry.data.repository.AndroidPantryRepository
 import com.icretu.mypantry.data.repository.SessionRepositoryImpl
-import com.icretu.mypantry.domain.repository.PantryRepository
+import com.icretu.mypantry.feature.pantry.domain.repository.PantryRepository
 import com.icretu.mypantry.domain.repository.SessionRepository
 import com.icretu.mypantry.domain.sync.AndroidStockEntryLocalSyncDataSource
 import com.icretu.mypantry.domain.sync.StockEntryLocalSyncDataSource

@@ -18,9 +18,9 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.icretu.mypantry.feature.household.presentation.invite.HouseholdInviteRoute
 import com.icretu.mypantry.feature.locations.presentation.LocationsRoute
-import com.icretu.mypantry.presentation.pantry.PantryRoute
-import com.icretu.mypantry.presentation.pantry.PantryViewModel
-import com.icretu.mypantry.presentation.pantry.StockEntryFormRoute
+import com.icretu.mypantry.feature.pantry.presentation.PantryRoute
+import com.icretu.mypantry.feature.pantry.presentation.PantryViewModel
+import com.icretu.mypantry.feature.pantry.presentation.stockEntry.StockEntryFormRoute
 import com.icretu.mypantry.presentation.placeholder.PlaceholderScreen
 import com.icretu.mypantry.feature.settings.presentation.SettingsRoute
 import org.koin.compose.viewmodel.koinViewModel
