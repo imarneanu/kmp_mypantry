@@ -1,6 +1,8 @@
 package com.icretu.mypantry.data.local
 
 import androidx.room.*
+import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.domain.model.StockEntryDetails
 import com.icretu.mypantry.domain.sync.SyncStatus
 import kotlinx.coroutines.flow.Flow
 
@@ -33,8 +35,7 @@ interface StockEntryDao {
         se.notes,
 
         se.updatedAtEpochMillis,
-        se.updatedBy,
-        se.isDeleted
+        se.updatedBy
 
     FROM stock_entries se
 
@@ -52,7 +53,7 @@ interface StockEntryDao {
     ORDER BY p.name ASC
     """
     )
-    fun observeStockEntries(): Flow<List<StockEntryWithDetails>>
+    fun observeStockEntries(): Flow<List<StockEntryDetails>>
 
     @Upsert
     suspend fun upsert(entry: StockEntryEntity)

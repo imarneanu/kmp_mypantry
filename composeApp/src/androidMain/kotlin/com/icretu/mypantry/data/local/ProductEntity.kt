@@ -16,13 +16,12 @@ data class ProductEntity(
     val notes: String? = null
 )
 
-fun ProductEntity.toDomain(categoryName: String = "") =
+fun ProductEntity.toDomain() =
     Product(
         id = id,
         name = name,
         brand = brand,
         categoryId = categoryId,
-        categoryName = categoryName,
         defaultUnit = defaultUnit,
         barcode = barcode,
         notes = notes

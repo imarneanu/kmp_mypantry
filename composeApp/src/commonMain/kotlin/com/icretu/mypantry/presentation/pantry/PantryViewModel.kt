@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icretu.mypantry.domain.model.Product
 import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.domain.model.toUiModel
 import com.icretu.mypantry.domain.session.UserSession
 import com.icretu.mypantry.domain.usecase.DeleteStockEntryUseCase
 import com.icretu.mypantry.domain.usecase.ObserveCategoriesUseCase
@@ -290,10 +291,6 @@ class PantryViewModel(
                     name = form.productName.trim(),
                     brand = form.productBrand.takeIf { it.isNotBlank() },
                     categoryId = form.categoryId,
-                    categoryName = _state.value.categoryOptions
-                        .firstOrNull { it.id == form.categoryId }
-                        ?.name
-                        .orEmpty(),
                     defaultUnit = form.unit.trim()
                 )
             )
@@ -303,20 +300,9 @@ class PantryViewModel(
                     id = form.stockEntryId ?: idGenerator.generate(),
                     householdId = userSession.householdId,
                     productId = productId,
-                    productName = form.productName.trim(),
-                    productBrand = form.productBrand.takeIf { it.isNotBlank() },
-                    categoryId = form.categoryId,
-                    categoryName = _state.value.categoryOptions
-                        .firstOrNull { it.id == form.categoryId }
-                        ?.name
-                        .orEmpty(),
                     quantity = quantity,
                     unit = form.unit.trim(),
                     locationId = form.locationId,
-                    locationName = _state.value.locationOptions
-                        .firstOrNull { it.id == form.locationId }
-                        ?.name
-                        .orEmpty(),
                     expirationDate = form.expirationDate,
                     storeName = form.storeName.takeIf { it.isNotBlank() },
                     price = price,

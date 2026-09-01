@@ -9,6 +9,7 @@ import com.icretu.mypantry.data.local.toEntity
 import com.icretu.mypantry.domain.model.Category
 import com.icretu.mypantry.domain.model.Product
 import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.domain.model.StockEntryDetails
 import com.icretu.mypantry.domain.model.StorageLocation
 import com.icretu.mypantry.domain.repository.PantryRepository
 import kotlinx.coroutines.flow.Flow
@@ -21,9 +22,8 @@ class AndroidPantryRepository(
     private val categoryDao: CategoryDao,
 ) : PantryRepository {
 
-    override fun observeStockEntries(): Flow<List<StockEntry>> =
+    override fun observeStockEntries(): Flow<List<StockEntryDetails>> =
         stockEntryDao.observeStockEntries()
-            .map { entries -> entries.map { it.toDomain() } }
 
     override fun observeProducts(): Flow<List<Product>> =
         productDao.observeProducts()
