@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icretu.mypantry.domain.model.Product
 import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.domain.model.UserSession
 import com.icretu.mypantry.domain.model.toUiModel
-import com.icretu.mypantry.domain.session.UserSession
+import com.icretu.mypantry.domain.repository.SessionRepository
 import com.icretu.mypantry.domain.usecase.DeleteStockEntryUseCase
 import com.icretu.mypantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.domain.usecase.ObserveLocationsUseCase
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class PantryViewModel(
@@ -34,7 +36,7 @@ class PantryViewModel(
     private val deleteStockEntryUseCase: DeleteStockEntryUseCase,
     private val idGenerator: IdGenerator,
     private val timestampProvider: TimestampProvider,
-    private val userSession: UserSession,
+    private val sessionRepository: SessionRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PantryState())
     val state: StateFlow<PantryState> = _state.asStateFlow()
@@ -295,10 +297,13 @@ class PantryViewModel(
                 )
             )
 
+            val session = sessionRepository.session.firstOrNull()
+                ?: error("No authenticated user")
+
             upsertStockEntryUseCase(
                 StockEntry(
                     id = form.stockEntryId ?: idGenerator.generate(),
-                    householdId = userSession.householdId,
+                    householdId = session.householdId.orEmpty(),
                     productId = productId,
                     quantity = quantity,
                     unit = form.unit.trim(),
@@ -308,7 +313,7 @@ class PantryViewModel(
                     price = price,
                     notes = form.notes.takeIf { it.isNotBlank() },
                     updatedAtEpochMillis = timestampProvider.nowEpochMillis(),
-                    updatedBy = userSession.userId,
+                    updatedBy = session.userId,
                 )
             )
 
