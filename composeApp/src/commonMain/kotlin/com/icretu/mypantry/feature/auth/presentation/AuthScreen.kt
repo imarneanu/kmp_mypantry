@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.auth
+package com.icretu.mypantry.feature.auth.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

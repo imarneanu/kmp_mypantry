@@ -1,6 +1,6 @@
-package com.icretu.mypantry.domain.repository
+package com.icretu.mypantry.feature.auth.domain.repository
 
-import com.icretu.mypantry.domain.model.AuthUser
+import com.icretu.mypantry.feature.auth.domain.model.AuthUser
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {

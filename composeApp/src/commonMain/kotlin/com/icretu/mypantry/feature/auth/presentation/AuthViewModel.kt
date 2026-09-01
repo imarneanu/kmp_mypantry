@@ -1,9 +1,9 @@
-package com.icretu.mypantry.presentation.auth
+package com.icretu.mypantry.feature.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icretu.mypantry.domain.usecase.SignInUseCase
-import com.icretu.mypantry.domain.usecase.SignUpUseCase
+import com.icretu.mypantry.feature.auth.domain.usecase.SignInUseCase
+import com.icretu.mypantry.feature.auth.domain.usecase.SignUpUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

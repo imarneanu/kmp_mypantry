@@ -1,6 +1,6 @@
-package com.icretu.mypantry.domain.usecase
+package com.icretu.mypantry.feature.auth.domain.usecase
 
-import com.icretu.mypantry.domain.repository.AuthRepository
+import com.icretu.mypantry.feature.auth.domain.repository.AuthRepository
 
 class SignUpUseCase(
     private val authRepository: AuthRepository

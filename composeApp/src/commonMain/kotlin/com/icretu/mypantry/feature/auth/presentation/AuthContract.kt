@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.auth
+package com.icretu.mypantry.feature.auth.presentation
 
 data class AuthState(
     val email: String = "",

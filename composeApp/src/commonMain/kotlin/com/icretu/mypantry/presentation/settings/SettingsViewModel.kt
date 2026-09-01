@@ -2,7 +2,7 @@ package com.icretu.mypantry.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icretu.mypantry.domain.usecase.SignOutUseCase
+import com.icretu.mypantry.feature.auth.domain.usecase.SignOutUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -6,6 +6,7 @@ import com.icretu.mypantry.di.androidModule
 import com.icretu.mypantry.di.commonModule
 import com.icretu.mypantry.di.databaseModule
 import com.icretu.mypantry.domain.sync.SyncCoordinator
+import com.icretu.mypantry.feature.auth.di.authModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,6 +29,7 @@ class MyPantryApplication : Application() {
             androidContext(this@MyPantryApplication)
             modules(
                 commonModule,
+                authModule,
                 androidModule,
                 databaseModule,
             )

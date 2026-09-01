@@ -1,4 +1,4 @@
-package com.icretu.mypantry.domain.model
+package com.icretu.mypantry.feature.auth.domain.model
 
 data class AuthUser(
     val uid: String,

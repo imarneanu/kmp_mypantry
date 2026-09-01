@@ -1,7 +1,7 @@
-package com.icretu.mypantry.data.remote
+package com.icretu.mypantry.feature.auth.data
 
-import com.icretu.mypantry.domain.model.AuthUser
-import com.icretu.mypantry.domain.repository.AuthRepository
+import com.icretu.mypantry.feature.auth.domain.model.AuthUser
+import com.icretu.mypantry.feature.auth.domain.repository.AuthRepository
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import kotlinx.coroutines.flow.Flow
