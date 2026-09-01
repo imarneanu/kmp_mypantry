@@ -1,5 +1,6 @@
-package com.icretu.mypantry.presentation.locations.components
+package com.icretu.mypantry.feature.locations.presentation.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -19,7 +20,7 @@ fun LocationCard(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick
     ) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(

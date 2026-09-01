@@ -17,7 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.icretu.mypantry.feature.household.presentation.invite.HouseholdInviteRoute
-import com.icretu.mypantry.presentation.locations.LocationsRoute
+import com.icretu.mypantry.feature.locations.presentation.LocationsRoute
 import com.icretu.mypantry.presentation.pantry.PantryRoute
 import com.icretu.mypantry.presentation.pantry.PantryViewModel
 import com.icretu.mypantry.presentation.pantry.StockEntryFormRoute

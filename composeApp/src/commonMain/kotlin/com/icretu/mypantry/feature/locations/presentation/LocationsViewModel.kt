@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.locations
+package com.icretu.mypantry.feature.locations.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

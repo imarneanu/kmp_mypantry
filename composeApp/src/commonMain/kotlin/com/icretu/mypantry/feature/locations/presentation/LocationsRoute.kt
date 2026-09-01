@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.locations
+package com.icretu.mypantry.feature.locations.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
