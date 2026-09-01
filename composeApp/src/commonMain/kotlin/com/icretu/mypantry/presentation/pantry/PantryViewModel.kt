@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icretu.mypantry.domain.model.Product
 import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.domain.model.UserSession
+import com.icretu.mypantry.domain.model.toUiModel
+import com.icretu.mypantry.domain.repository.SessionRepository
 import com.icretu.mypantry.domain.usecase.DeleteStockEntryUseCase
 import com.icretu.mypantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.domain.usecase.ObserveLocationsUseCase
@@ -11,6 +14,8 @@ import com.icretu.mypantry.domain.usecase.ObserveProductsUseCase
 import com.icretu.mypantry.domain.usecase.ObserveStockEntriesUseCase
 import com.icretu.mypantry.domain.usecase.UpsertProductUseCase
 import com.icretu.mypantry.domain.usecase.UpsertStockEntryUseCase
+import com.icretu.mypantry.domain.util.IdGenerator
+import com.icretu.mypantry.domain.util.TimestampProvider
 import com.icretu.mypantry.presentation.pantry.model.StockEntryFormState
 import com.icretu.mypantry.utils.updateState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class PantryViewModel(
@@ -28,6 +34,9 @@ class PantryViewModel(
     private val upsertProductUseCase: UpsertProductUseCase,
     private val upsertStockEntryUseCase: UpsertStockEntryUseCase,
     private val deleteStockEntryUseCase: DeleteStockEntryUseCase,
+    private val idGenerator: IdGenerator,
+    private val timestampProvider: TimestampProvider,
+    private val sessionRepository: SessionRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PantryState())
     val state: StateFlow<PantryState> = _state.asStateFlow()
@@ -235,7 +244,7 @@ class PantryViewModel(
         }
     }
 
-    private fun selectProduct(productId: Long) {
+    private fun selectProduct(productId: String) {
         val product = _state.value.products.firstOrNull { it.id == productId } ?: return
 
         _state.updateState {
@@ -280,39 +289,34 @@ class PantryViewModel(
         viewModelScope.launch {
             val productId = form.productId ?: upsertProductUseCase(
                 Product(
+                    id = idGenerator.generate(),
                     name = form.productName.trim(),
                     brand = form.productBrand.takeIf { it.isNotBlank() },
                     categoryId = form.categoryId,
-                    categoryName = _state.value.categoryOptions
-                        .firstOrNull { it.id == form.categoryId }
-                        ?.name
-                        .orEmpty(),
                     defaultUnit = form.unit.trim()
                 )
             )
 
+            val session = sessionRepository.session.firstOrNull()
+                ?: error("No authenticated user")
+
+            val householdId = session.householdId
+                ?: error("No active household")
+
             upsertStockEntryUseCase(
                 StockEntry(
-                    id = form.stockEntryId ?: 0,
+                    id = form.stockEntryId ?: idGenerator.generate(),
+                    householdId = householdId,
                     productId = productId,
-                    productName = form.productName.trim(),
-                    productBrand = form.productBrand.takeIf { it.isNotBlank() },
-                    categoryId = form.categoryId,
-                    categoryName = _state.value.categoryOptions
-                        .firstOrNull { it.id == form.categoryId }
-                        ?.name
-                        .orEmpty(),
                     quantity = quantity,
                     unit = form.unit.trim(),
                     locationId = form.locationId,
-                    locationName = _state.value.locationOptions
-                        .firstOrNull { it.id == form.locationId }
-                        ?.name
-                        .orEmpty(),
                     expirationDate = form.expirationDate,
                     storeName = form.storeName.takeIf { it.isNotBlank() },
                     price = price,
-                    notes = form.notes.takeIf { it.isNotBlank() }
+                    notes = form.notes.takeIf { it.isNotBlank() },
+                    updatedAtEpochMillis = timestampProvider.nowEpochMillis(),
+                    updatedBy = session.userId,
                 )
             )
 

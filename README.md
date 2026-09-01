@@ -33,3 +33,64 @@ in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and r
 ---
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+
+5. Link Firebase to the iOS app
+
+The GitLive dependency provides the common Kotlin API, but it does not transitively link the native iOS Firebase SDK.
+
+Open iosApp.xcodeproj in Xcode:
+
+1. Select the project
+2. Select Package Dependencies
+3. Press +
+4. Add the Firebase Apple SDK package
+5. Add these products to the iosApp target:
+    * FirebaseCore
+    * FirebaseAuth
+    * FirebaseFirestore
+
+Firebase officially supports adding its Apple SDK through Swift Package Manager.
+
+Then initialize Firebase in the Swift app entry point.
+
+Your iOSApp.swift may currently look similar to:
+import SwiftUI
+
+@main
+struct iOSApp: App {
+var body: some Scene {
+WindowGroup {
+ContentView()
+}
+}
+}
+
+Update it:
+import SwiftUI
+import FirebaseCore
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+func application(
+_ application: UIApplication,
+didFinishLaunchingWithOptions launchOptions:
+[UIApplication.LaunchOptionsKey: Any]? = nil
+) -> Bool {
+FirebaseApp.configure()
+return true
+}
+}
+
+@main
+struct iOSApp: App {
+
+    @UIApplicationDelegateAdaptor(AppDelegate.self)
+    var delegate
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}
+
+Make sure GoogleService-Info.plist has target membership enabled for iosApp.

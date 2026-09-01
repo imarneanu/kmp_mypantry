@@ -6,8 +6,8 @@ import com.icretu.mypantry.domain.model.StorageLocation
 
 @Entity(tableName = "storage_locations")
 data class StorageLocationEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey
+    val id: String,
     val name: String,
     val type: String = "Other"
 )

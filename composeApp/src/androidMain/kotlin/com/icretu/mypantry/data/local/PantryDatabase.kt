@@ -3,6 +3,8 @@ package com.icretu.mypantry.data.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.icretu.mypantry.data.local.converters.LocalDateConverter
+import com.icretu.mypantry.data.local.converters.SyncStatusConverter
 
 @Database(
     entities = [
@@ -14,7 +16,10 @@ import androidx.room.TypeConverters
     version = 1,
     exportSchema = false
 )
-@TypeConverters(LocalDateConverter::class)
+@TypeConverters(
+    LocalDateConverter::class,
+    SyncStatusConverter::class,
+)
 abstract class PantryDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun stockEntryDao(): StockEntryDao

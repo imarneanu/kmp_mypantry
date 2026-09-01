@@ -5,6 +5,7 @@ sealed class AppRoute(val route: String) {
 
     data object Pantry : AppRoute("pantry")
     data object StockEntryForm : AppRoute("stock_entry_form")
+    data object HouseholdInvite : AppRoute("household_invite")
 
     data object Locations : AppRoute("locations")
     data object Categories : AppRoute("categories")

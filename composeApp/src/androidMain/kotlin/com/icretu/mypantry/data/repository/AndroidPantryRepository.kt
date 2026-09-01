@@ -9,6 +9,7 @@ import com.icretu.mypantry.data.local.toEntity
 import com.icretu.mypantry.domain.model.Category
 import com.icretu.mypantry.domain.model.Product
 import com.icretu.mypantry.domain.model.StockEntry
+import com.icretu.mypantry.domain.model.StockEntryDetails
 import com.icretu.mypantry.domain.model.StorageLocation
 import com.icretu.mypantry.domain.repository.PantryRepository
 import kotlinx.coroutines.flow.Flow
@@ -21,9 +22,8 @@ class AndroidPantryRepository(
     private val categoryDao: CategoryDao,
 ) : PantryRepository {
 
-    override fun observeStockEntries(): Flow<List<StockEntry>> =
+    override fun observeStockEntries(): Flow<List<StockEntryDetails>> =
         stockEntryDao.observeStockEntries()
-            .map { entries -> entries.map { it.toDomain() } }
 
     override fun observeProducts(): Flow<List<Product>> =
         productDao.observeProducts()
@@ -35,13 +35,24 @@ class AndroidPantryRepository(
     override fun observeCategories(): Flow<List<Category>> = categoryDao.observeCategories()
         .map { categories -> categories.map { it.toDomain() } }
 
-    override suspend fun upsertProduct(product: Product): Long =
+    override suspend fun upsertProduct(product: Product): String {
         productDao.upsert(product.toEntity())
+        return product.id
+    }
 
     override suspend fun upsertStockEntry(entry: StockEntry) {
         stockEntryDao.upsert(entry.toEntity())
     }
 
-    override suspend fun deleteStockEntry(id: Long) =
-        stockEntryDao.deleteById(id)
+    override suspend fun deleteStockEntry(
+        id: String,
+        updatedAtEpochMillis: Long,
+        updatedBy: String
+    ) {
+        stockEntryDao.markDeleted(
+            id = id,
+            updatedAtEpochMillis = updatedAtEpochMillis,
+            updatedBy = updatedBy
+        )
+    }
 }

@@ -4,7 +4,11 @@ import androidx.room.Room
 import com.icretu.mypantry.data.local.DatabaseSeeder
 import com.icretu.mypantry.data.local.PantryDatabase
 import com.icretu.mypantry.data.repository.AndroidPantryRepository
+import com.icretu.mypantry.data.repository.SessionRepositoryImpl
 import com.icretu.mypantry.domain.repository.PantryRepository
+import com.icretu.mypantry.domain.repository.SessionRepository
+import com.icretu.mypantry.domain.sync.AndroidStockEntryLocalSyncDataSource
+import com.icretu.mypantry.domain.sync.StockEntryLocalSyncDataSource
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -27,4 +31,6 @@ val androidModule = module {
     singleOf((::DatabaseSeeder))
 
     singleOf(::AndroidPantryRepository).bind<PantryRepository>()
+    singleOf(::AndroidStockEntryLocalSyncDataSource).bind<StockEntryLocalSyncDataSource>()
+    singleOf(::SessionRepositoryImpl).bind<SessionRepository>()
 }
