@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.settings
+package com.icretu.mypantry.feature.settings.presentation
 
 data class SettingsState(
     val isSigningOut: Boolean = false,

@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.settings
+package com.icretu.mypantry.feature.settings.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

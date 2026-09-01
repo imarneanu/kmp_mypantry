@@ -12,7 +12,6 @@ import com.icretu.mypantry.domain.util.IdGenerator
 import com.icretu.mypantry.domain.util.TimestampProvider
 import com.icretu.mypantry.presentation.locations.LocationsViewModel
 import com.icretu.mypantry.presentation.pantry.PantryViewModel
-import com.icretu.mypantry.presentation.settings.SettingsViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -22,7 +21,6 @@ import org.koin.dsl.module
 val commonModule = module {
     viewModelOf(::PantryViewModel)
     viewModelOf(::LocationsViewModel)
-    viewModelOf(::SettingsViewModel)
 
     factoryOf(::ObserveStockEntriesUseCase)
     factoryOf(::UpsertStockEntryUseCase)

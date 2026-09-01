@@ -1,4 +1,4 @@
-package com.icretu.mypantry.presentation.settings
+package com.icretu.mypantry.feature.settings.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

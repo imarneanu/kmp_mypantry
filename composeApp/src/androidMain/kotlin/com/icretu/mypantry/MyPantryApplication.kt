@@ -8,6 +8,7 @@ import com.icretu.mypantry.di.databaseModule
 import com.icretu.mypantry.domain.sync.SyncCoordinator
 import com.icretu.mypantry.feature.auth.di.authModule
 import com.icretu.mypantry.feature.household.di.householdModule
+import com.icretu.mypantry.feature.settings.di.settingsModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -32,6 +33,7 @@ class MyPantryApplication : Application() {
                 commonModule,
                 authModule,
                 householdModule,
+                settingsModule,
                 androidModule,
                 databaseModule,
             )
