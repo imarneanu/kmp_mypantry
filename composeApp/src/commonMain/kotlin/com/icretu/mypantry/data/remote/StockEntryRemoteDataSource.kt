@@ -4,6 +4,8 @@ import com.icretu.mypantry.domain.model.StockEntry
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.datetime.LocalDate
 
 class StockEntryRemoteDataSource {
     private fun collection(householdId: String) =
@@ -14,17 +16,33 @@ class StockEntryRemoteDataSource {
 
     fun observeAll(
         householdId: String
-    ): Flow<List<StockEntry>> {
-        TODO("Step 5")
-    }
-//        collection(householdId)
-//            .snapshots
-//            .map { snapshot ->
-//                snapshot.documents.map { document ->
-//                    document.data<RemoteStockEntry>()
-//                        .toRecord()
-//                }
-//            }
+    ): Flow<List<StockEntry>> =
+        collection(householdId)
+            .snapshots
+            .map { snapshot ->
+                snapshot.documents.map { document ->
+                    StockEntry(
+                        id = document.get("id"),
+                        householdId = document.get("householdId"),
+                        productId = document.get("productId"),
+                        locationId = document.get("locationId"),
+                        quantity = document.get("quantity"),
+                        unit = document.get("unit"),
+                        expirationDate = document
+                            .get<String?>("expirationDate")
+                            ?.let(LocalDate::parse),
+                        purchaseDate = document
+                            .get<String?>("purchaseDate")
+                            ?.let(LocalDate::parse),
+                        storeName = document.get<String?>("storeName"),
+                        price = document.get<Double?>("price"),
+                        notes = document.get<String?>("notes"),
+                        updatedAtEpochMillis = document.get("updatedAtEpochMillis"),
+                        updatedBy = document.get("updatedBy"),
+                        isDeleted = document.get<Boolean?>("isDeleted") ?: false
+                    )
+                }
+            }
 
     suspend fun upsert(entry: StockEntry) {
         collection(entry.householdId)
