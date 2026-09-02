@@ -41,8 +41,6 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.room.ktx)
-            implementation(libs.androidx.room.runtime)
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.koin.android)
         }
@@ -57,6 +55,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
             implementation(libs.firebase.auth)
             implementation(libs.firebase.firestore)
             implementation(libs.koin.compose.viewmodel)
@@ -101,5 +101,7 @@ dependencies {
     debugImplementation(compose.uiTooling)
 
     add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
 }
 

@@ -1,6 +1,8 @@
 package com.icretu.mypantry.feature.pantry.di
 
 import com.icretu.mypantry.feature.pantry.data.StockEntryRemoteDataSource
+import com.icretu.mypantry.feature.pantry.data.repository.PantryRepositoryImpl
+import com.icretu.mypantry.feature.pantry.domain.repository.PantryRepository
 import com.icretu.mypantry.feature.pantry.domain.usecase.DeleteStockEntryUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveLocationsUseCase
@@ -12,12 +14,14 @@ import com.icretu.mypantry.feature.pantry.presentation.PantryViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val pantryModule = module {
     viewModelOf(::PantryViewModel)
 
     singleOf(::StockEntryRemoteDataSource)
+    singleOf(::PantryRepositoryImpl).bind<PantryRepository>()
 
     factoryOf(::ObserveStockEntriesUseCase)
     factoryOf(::UpsertStockEntryUseCase)

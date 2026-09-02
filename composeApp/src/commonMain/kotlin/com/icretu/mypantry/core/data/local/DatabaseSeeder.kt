@@ -1,4 +1,4 @@
-package com.icretu.mypantry.data.local
+package com.icretu.mypantry.core.data.local
 
 import com.icretu.mypantry.core.utils.IdGenerator
 import com.icretu.mypantry.feature.pantry.data.local.CategoryDao
