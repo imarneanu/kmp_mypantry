@@ -32,5 +32,4 @@ val androidModule = module {
 
     singleOf(::AndroidPantryRepository).bind<PantryRepository>()
     singleOf(::AndroidStockEntryLocalSyncDataSource).bind<StockEntryLocalSyncDataSource>()
-    singleOf(::SessionRepositoryImpl).bind<SessionRepository>()
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import com.icretu.mypantry.data.local.DatabaseSeeder
 import com.icretu.mypantry.di.androidModule
 import com.icretu.mypantry.core.di.commonModule
+import com.icretu.mypantry.core.session.di.sessionModule
 import com.icretu.mypantry.core.sync.di.syncModule
 import com.icretu.mypantry.core.sync.SyncCoordinator
 import com.icretu.mypantry.feature.auth.di.authModule
@@ -35,6 +36,7 @@ class MyPantryApplication : Application() {
                 commonModule,
                 authModule,
                 householdModule,
+                sessionModule,
                 pantryModule,
                 locationsModule,
                 settingsModule,
