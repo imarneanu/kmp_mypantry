@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.googleServices)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 kotlin {
@@ -19,11 +20,18 @@ kotlin {
         }
     }
     
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
+    iosArm64()
+    iosSimulatorArm64()
+
+    cocoapods {
+        version = "1.0"
+        summary = "MyPantry shared module"
+        homepage = "https://example.com"
+        ios.deploymentTarget = "18.2"
+        pod("FirebaseCore")
+        pod("FirebaseAuth")
+        pod("FirebaseFirestore")
+        framework {
             baseName = "ComposeApp"
             isStatic = true
         }
@@ -35,6 +43,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.room.ktx)
             implementation(libs.androidx.room.runtime)
+            implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.koin.android)
         }
         commonMain.dependencies {
