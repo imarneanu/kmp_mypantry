@@ -17,3 +17,19 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# CocoaPods generated files
+iosApp/Pods/
+
+# Kotlin/Native / CocoaPods generated framework
+composeApp/build/
+
+# Xcode generated CocoaPods workspace
+iosApp/iosApp.xcworkspace/
+
+/composeApp/composeApp.podspec

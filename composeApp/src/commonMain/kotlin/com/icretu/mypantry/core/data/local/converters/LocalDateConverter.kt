@@ -1,4 +1,4 @@
-package com.icretu.mypantry.data.local.converters
+package com.icretu.mypantry.core.data.local.converters
 
 import androidx.room.TypeConverter
 import kotlinx.datetime.LocalDate

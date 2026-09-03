@@ -15,7 +15,7 @@ import com.icretu.mypantry.feature.pantry.data.local.StockEntryDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class AndroidPantryRepository(
+class PantryRepositoryImpl(
     private val stockEntryDao: StockEntryDao,
     private val productDao: ProductDao,
     private val storageLocationDao: StorageLocationDao,
