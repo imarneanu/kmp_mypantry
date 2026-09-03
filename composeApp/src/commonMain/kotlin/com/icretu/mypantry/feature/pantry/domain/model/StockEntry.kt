@@ -18,7 +18,7 @@ data class StockEntry(
     val price: Double? = null,
     val notes: String? = null,
 
-    val updatedAtEpochMillis: Long,
+    val updatedAtEpochMillis: Long = 0,
     val updatedBy: String,
 
     val isDeleted: Boolean = false,

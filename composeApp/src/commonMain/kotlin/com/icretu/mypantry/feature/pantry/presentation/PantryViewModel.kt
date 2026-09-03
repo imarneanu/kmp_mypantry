@@ -2,10 +2,12 @@ package com.icretu.mypantry.feature.pantry.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.icretu.mypantry.core.session.SessionRepository
+import com.icretu.mypantry.core.ui.updateState
+import com.icretu.mypantry.core.utils.IdGenerator
 import com.icretu.mypantry.feature.pantry.domain.model.Product
 import com.icretu.mypantry.feature.pantry.domain.model.StockEntry
 import com.icretu.mypantry.feature.pantry.domain.model.toUiModel
-import com.icretu.mypantry.core.session.SessionRepository
 import com.icretu.mypantry.feature.pantry.domain.usecase.DeleteStockEntryUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveCategoriesUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveLocationsUseCase
@@ -13,11 +15,8 @@ import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveProductsUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.ObserveStockEntriesUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.UpsertProductUseCase
 import com.icretu.mypantry.feature.pantry.domain.usecase.UpsertStockEntryUseCase
-import com.icretu.mypantry.core.utils.IdGenerator
-import com.icretu.mypantry.core.time.TimestampProvider
 import com.icretu.mypantry.feature.pantry.presentation.stockEntry.StockEntryFormState
 import com.icretu.mypantry.feature.pantry.presentation.stockEntry.StockEntryUiModel
-import com.icretu.mypantry.core.ui.updateState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,7 +34,6 @@ class PantryViewModel(
     private val upsertStockEntryUseCase: UpsertStockEntryUseCase,
     private val deleteStockEntryUseCase: DeleteStockEntryUseCase,
     private val idGenerator: IdGenerator,
-    private val timestampProvider: TimestampProvider,
     private val sessionRepository: SessionRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PantryState())
@@ -287,21 +285,23 @@ class PantryViewModel(
         }
 
         viewModelScope.launch {
-            val productId = form.productId ?: upsertProductUseCase(
-                Product(
-                    id = idGenerator.generate(),
-                    name = form.productName.trim(),
-                    brand = form.productBrand.takeIf { it.isNotBlank() },
-                    categoryId = form.categoryId,
-                    defaultUnit = form.unit.trim()
-                )
-            )
-
             val session = sessionRepository.session.firstOrNull()
                 ?: error("No authenticated user")
 
             val householdId = session.householdId
                 ?: error("No active household")
+
+            val productId = form.productId ?: upsertProductUseCase(
+                Product(
+                    id = idGenerator.generate(),
+                    householdId = householdId,
+                    name = form.productName.trim(),
+                    brand = form.productBrand.takeIf { it.isNotBlank() },
+                    categoryId = form.categoryId,
+                    defaultUnit = form.unit.trim(),
+                    updatedBy = session.userId,
+                )
+            )
 
             upsertStockEntryUseCase(
                 StockEntry(
@@ -315,7 +315,6 @@ class PantryViewModel(
                     storeName = form.storeName.takeIf { it.isNotBlank() },
                     price = price,
                     notes = form.notes.takeIf { it.isNotBlank() },
-                    updatedAtEpochMillis = timestampProvider.nowEpochMillis(),
                     updatedBy = session.userId,
                 )
             )
