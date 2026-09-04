@@ -15,10 +15,10 @@ class DatabaseSeeder(
         if (storageLocationDao.count() == 0) {
             storageLocationDao.insertAll(
                 listOf(
-                    StorageLocationEntity(id = idGenerator.generate(), name = "Pantry", type = "Pantry"),
-                    StorageLocationEntity(id = idGenerator.generate(), name = "Freezer", type = "Freezer"),
-                    StorageLocationEntity(id = idGenerator.generate(), name = "Cupboard", type = "Cupboard"),
-                    StorageLocationEntity(id = idGenerator.generate(), name = "Bathroom", type = "Bathroom")
+                    StorageLocationEntity(DefaultStorageLocationIds.PANTRY, name = "Pantry", type = "Pantry"),
+                    StorageLocationEntity(DefaultStorageLocationIds.FREEZER, name = "Freezer", type = "Freezer"),
+                    StorageLocationEntity(DefaultStorageLocationIds.CUPBOARD, name = "Cupboard", type = "Cupboard"),
+                    StorageLocationEntity(DefaultStorageLocationIds.BATHROOM, name = "Bathroom", type = "Bathroom")
                 )
             )
         }
@@ -26,13 +26,28 @@ class DatabaseSeeder(
         if (categoryDao.count() == 0) {
             categoryDao.insertAll(
                 listOf(
-                    CategoryEntity(id = idGenerator.generate(), name = "Essentials"),
-                    CategoryEntity(id = idGenerator.generate(), name = "Frozen food"),
-                    CategoryEntity(id = idGenerator.generate(), name = "Tea & coffee"),
-                    CategoryEntity(id = idGenerator.generate(), name = "Toiletries"),
-                    CategoryEntity(id = idGenerator.generate(), name = "Cleaning products")
+                    CategoryEntity(DefaultCategoryIds.ESSENTIALS, name = "Essentials"),
+                    CategoryEntity(DefaultCategoryIds.FROZEN_FOOD, name = "Frozen food"),
+                    CategoryEntity(DefaultCategoryIds.TEA_COFFEE, name = "Tea & coffee"),
+                    CategoryEntity(DefaultCategoryIds.TOILETRIES, name = "Toiletries"),
+                    CategoryEntity(DefaultCategoryIds.CLEANING_PRODUCTS, name = "Cleaning products")
                 )
             )
         }
     }
+}
+
+object DefaultCategoryIds {
+    const val ESSENTIALS = "category_essentials"
+    const val FROZEN_FOOD = "category_frozen_food"
+    const val TEA_COFFEE = "category_tea_coffee"
+    const val TOILETRIES = "category_toiletries"
+    const val CLEANING_PRODUCTS = "category_cleaning_products"
+}
+
+object DefaultStorageLocationIds {
+    const val PANTRY = "location_pantry"
+    const val FREEZER = "location_freezer"
+    const val CUPBOARD = "location_cupboard"
+    const val BATHROOM = "location_bathroom"
 }
