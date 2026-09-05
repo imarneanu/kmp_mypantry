@@ -47,12 +47,13 @@ interface StockEntryDao {
     INNER JOIN storage_locations sl
         ON se.locationId = sl.id
 
-    WHERE se.isDeleted = 0
+    WHERE se.householdId = :householdId
+      AND se.isDeleted = 0
 
     ORDER BY p.name ASC
     """
     )
-    fun observeStockEntries(): Flow<List<StockEntryDetails>>
+    fun observeStockEntries(householdId: String): Flow<List<StockEntryDetails>>
 
     @Upsert
     suspend fun upsert(entry: StockEntryEntity)

@@ -1,28 +1,24 @@
-package com.icretu.mypantry.core.sync
+package com.icretu.mypantry.core.sync.product
 
-import com.icretu.mypantry.feature.pantry.data.local.StockEntryDao
+import com.icretu.mypantry.core.sync.SyncStatus
+import com.icretu.mypantry.feature.pantry.data.local.ProductDao
 import com.icretu.mypantry.feature.pantry.data.local.toDomain
 import com.icretu.mypantry.feature.pantry.data.local.toSyncedEntity
-import com.icretu.mypantry.feature.pantry.domain.model.StockEntry
+import com.icretu.mypantry.feature.pantry.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class StockEntryLocalSyncDataSourceImpl(
-    private val dao: StockEntryDao
-) : StockEntryLocalSyncDataSource {
+class ProductLocalSyncDataSourceImpl(
+    private val dao: ProductDao,
+) : ProductLocalSyncDataSource {
 
     override fun observePending(
-        householdId: String
-    ): Flow<List<StockEntry>> =
+        householdId: String,
+    ): Flow<List<Product>> =
         dao.observePending(householdId)
             .map { entities ->
                 entities.map { it.toDomain() }
             }
-
-    override suspend fun getById(
-        id: String
-    ): StockEntry? =
-        dao.getById(id)?.toDomain()
 
     override suspend fun markSyncing(id: String) {
         dao.updateSyncStatus(id, SyncStatus.SYNCING)
@@ -37,24 +33,24 @@ class StockEntryLocalSyncDataSourceImpl(
     }
 
     override suspend fun applyRemote(
-        entry: StockEntry
+        product: Product,
     ) {
-        val local = dao.getById(entry.id)
+        val local = dao.getById(product.id)
+
         when {
             local == null -> {
                 dao.upsertFromRemote(
-                    entry.toSyncedEntity()
+                    product.toSyncedEntity()
                 )
             }
 
             local.syncStatus != SyncStatus.SYNCED -> {
-                // We currently have a local modification waiting to upload.
-                // Don't overwrite it.
+                // Keep local pending changes.
             }
 
-            entry.updatedAtEpochMillis > local.updatedAtEpochMillis -> {
+            product.updatedAtEpochMillis > local.updatedAtEpochMillis -> {
                 dao.upsertFromRemote(
-                    entry.toSyncedEntity()
+                    product.toSyncedEntity()
                 )
             }
         }

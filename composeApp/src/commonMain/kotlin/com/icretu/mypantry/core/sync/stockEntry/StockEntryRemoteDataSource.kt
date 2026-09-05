@@ -1,4 +1,4 @@
-package com.icretu.mypantry.feature.pantry.data
+package com.icretu.mypantry.core.sync.stockEntry
 
 import com.icretu.mypantry.feature.pantry.domain.model.StockEntry
 import dev.gitlive.firebase.Firebase

@@ -5,5 +5,5 @@ import com.icretu.mypantry.feature.pantry.domain.repository.PantryRepository
 class ObserveStockEntriesUseCase(
     private val repository: PantryRepository
 ) {
-    operator fun invoke() = repository.observeStockEntries()
+    operator fun invoke(householdId: String) = repository.observeStockEntries(householdId)
 }

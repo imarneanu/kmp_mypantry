@@ -39,6 +39,24 @@ data class StockEntryEntity(
     val isDeleted: Boolean = false,
 )
 
+fun StockEntryEntity.toDomain(): StockEntry =
+    StockEntry(
+        id = id,
+        householdId = householdId,
+        productId = productId,
+        locationId = locationId,
+        quantity = quantity,
+        unit = unit,
+        expirationDate = expirationDate,
+        purchaseDate = purchaseDate,
+        storeName = storeName,
+        price = price,
+        notes = notes,
+        updatedAtEpochMillis = updatedAtEpochMillis,
+        updatedBy = updatedBy,
+        isDeleted = isDeleted,
+    )
+
 fun StockEntry.toSyncedEntity() = toEntity(SyncStatus.SYNCED)
 
 fun StockEntry.toEntity(syncStatus: SyncStatus = SyncStatus.PENDING) =
@@ -57,23 +75,5 @@ fun StockEntry.toEntity(syncStatus: SyncStatus = SyncStatus.PENDING) =
         updatedAtEpochMillis = updatedAtEpochMillis,
         updatedBy = updatedBy,
         syncStatus = syncStatus,
-        isDeleted = isDeleted,
-    )
-
-fun StockEntryEntity.toDomain(): StockEntry =
-    StockEntry(
-        id = id,
-        householdId = householdId,
-        productId = productId,
-        locationId = locationId,
-        quantity = quantity,
-        unit = unit,
-        expirationDate = expirationDate,
-        purchaseDate = purchaseDate,
-        storeName = storeName,
-        price = price,
-        notes = notes,
-        updatedAtEpochMillis = updatedAtEpochMillis,
-        updatedBy = updatedBy,
         isDeleted = isDeleted,
     )
