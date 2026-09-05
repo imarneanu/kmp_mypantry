@@ -22,7 +22,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
 class PantryViewModel(
@@ -51,7 +55,13 @@ class PantryViewModel(
 
     private fun observeStockEntries() {
         viewModelScope.launch {
-            observeStockEntriesUseCase()
+            sessionRepository.session
+                .filterNotNull()
+                .mapNotNull { it.householdId }
+                .distinctUntilChanged()
+                .flatMapLatest { householdId ->
+                    observeStockEntriesUseCase(householdId)
+                }
                 .collect { entries ->
                     _state.updateState {
                         copy(
@@ -65,7 +75,13 @@ class PantryViewModel(
 
     private fun observeProducts() {
         viewModelScope.launch {
-            observeProductsUseCase()
+            sessionRepository.session
+                .filterNotNull()
+                .mapNotNull { it.householdId }
+                .distinctUntilChanged()
+                .flatMapLatest { householdId ->
+                    observeProductsUseCase(householdId)
+                }
                 .collect { products ->
                     _state.updateState {
                         copy(products = products)

@@ -22,11 +22,11 @@ class PantryRepositoryImpl(
     private val categoryDao: CategoryDao,
 ) : PantryRepository {
 
-    override fun observeStockEntries(): Flow<List<StockEntryDetails>> =
-        stockEntryDao.observeStockEntries()
+    override fun observeStockEntries(householdId: String): Flow<List<StockEntryDetails>> =
+        stockEntryDao.observeStockEntries(householdId)
 
-    override fun observeProducts(): Flow<List<Product>> =
-        productDao.observeProducts()
+    override fun observeProducts(householdId: String): Flow<List<Product>> =
+        productDao.observeProducts(householdId)
             .map { products -> products.map { it.toDomain() } }
 
     override fun observeLocations(): Flow<List<StorageLocation>> = storageLocationDao.observeLocations()

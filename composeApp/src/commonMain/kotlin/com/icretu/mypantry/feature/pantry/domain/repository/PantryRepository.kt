@@ -8,8 +8,8 @@ import com.icretu.mypantry.feature.pantry.domain.model.StorageLocation
 import kotlinx.coroutines.flow.Flow
 
 interface PantryRepository {
-    fun observeStockEntries(): Flow<List<StockEntryDetails>>
-    fun observeProducts(): Flow<List<Product>>
+    fun observeStockEntries(householdId: String): Flow<List<StockEntryDetails>>
+    fun observeProducts(householdId: String): Flow<List<Product>>
     fun observeLocations(): Flow<List<StorageLocation>>
     fun observeCategories(): Flow<List<Category>>
 

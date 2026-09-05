@@ -12,10 +12,11 @@ interface ProductDao {
     @Query(
         """
         SELECT * FROM products
+        WHERE householdId = :householdId
         ORDER BY name ASC
         """
     )
-    fun observeProducts(): Flow<List<ProductEntity>>
+    fun observeProducts(householdId: String): Flow<List<ProductEntity>>
 
     @Query(
         """
